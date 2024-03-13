@@ -51,7 +51,7 @@
     "docker:build": "docker-compose build"
   },
   "dependencies": {
-    "@apollo/server": "^4.7.5",
+    "@apollo/server": "^4.9.3",
     "@devoxa/prisma-relay-cursor-connection": "2.2.3",
     "@nestjs/apollo": "12.0.7",
     "@nestjs/common": "10.1.0",
