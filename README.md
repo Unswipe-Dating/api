@@ -146,8 +146,7 @@ Run Nest Server in Development mode:
 npm run start
 
 # watch mode
-npm run start:dev
-```
+xx```
 
 Run Nest Server in Production mode:
 
