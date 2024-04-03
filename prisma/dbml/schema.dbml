@@ -10,24 +10,68 @@ Table User {
   password String [not null]
   firstname String
   lastname String
-  posts Post [not null]
-  role Role [not null]
+  profile Profile
+  wallet Wallet
+  chats Chat [not null]
+  prompts Prompt [not null]
+  Request Request [not null]
 }
 
-Table Post {
+Table Profile {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   published Boolean [not null]
   title String [not null]
   content String
-  author User
-  authorId String
+  user User [not null]
+  userId String [unique, not null]
 }
 
-Enum Role {
-  ADMIN
-  USER
+Table Wallet {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [unique, not null]
 }
 
-Ref: Post.authorId > User.id
+Table Chat {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [unique, not null]
+}
+
+Table Prompt {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [unique, not null]
+}
+
+Table Request {
+  id String [pk]
+  type RequestType [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [unique, not null]
+}
+
+Enum RequestType {
+  EXCLUSIVE
+  HYPER_EXCLUSIVE
+}
+
+Ref: Profile.userId - User.id
+
+Ref: Wallet.userId - User.id
+
+Ref: Chat.userId > User.id
+
+Ref: Prompt.userId > User.id
+
+Ref: Request.userId > User.id

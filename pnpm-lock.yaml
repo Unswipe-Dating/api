@@ -10,7 +10,7 @@ dependencies:
     version: 4.10.1(graphql@16.8.1)
   '@devoxa/prisma-relay-cursor-connection':
     specifier: 2.2.3
-    version: 2.2.3(@prisma/client@5.11.0)
+    version: 2.2.3(@prisma/client@5.0.0)
   '@nestjs/apollo':
     specifier: 12.0.7
     version: 12.0.7(@apollo/server@4.10.1)(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(@nestjs/graphql@12.0.8)(graphql@16.8.1)
@@ -39,8 +39,8 @@ dependencies:
     specifier: 7.1.2
     version: 7.1.2(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
   '@prisma/client':
-    specifier: ^5.0.0
-    version: 5.11.0(prisma@5.0.0)
+    specifier: 5.0.0
+    version: 5.0.0(prisma@5.0.0)
   bcrypt:
     specifier: 5.1.0
     version: 5.1.0
@@ -61,7 +61,7 @@ dependencies:
     version: 2.0.0(graphql@16.8.1)
   nestjs-prisma:
     specifier: 0.22.0-dev.0
-    version: 0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.11.0)(prisma@5.0.0)
+    version: 0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.0.0)(prisma@5.0.0)
   passport:
     specifier: 0.6.0
     version: 0.6.0
@@ -822,12 +822,12 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@devoxa/prisma-relay-cursor-connection@2.2.3(@prisma/client@5.11.0):
+  /@devoxa/prisma-relay-cursor-connection@2.2.3(@prisma/client@5.0.0):
     resolution: {integrity: sha512-//BbdW4h0HGWRDMW6F5kwL5GBuX+tBHZI4lgSXWuw/Txvkz4/gBSKG6bu8QAGmovhz3dCDKbh6VCnH7xLb0QlA==}
     peerDependencies:
       '@prisma/client': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
-      '@prisma/client': 5.11.0(prisma@5.0.0)
+      '@prisma/client': 5.0.0(prisma@5.0.0)
       graphql-fields: 2.0.3
     dev: false
 
@@ -1629,8 +1629,8 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: true
 
-  /@prisma/client@5.11.0(prisma@5.0.0):
-    resolution: {integrity: sha512-SWshvS5FDXvgJKM/a0y9nDC1rqd7KG0Q6ZVzd+U7ZXK5soe73DJxJJgbNBt2GNXOa+ysWB4suTpdK5zfFPhwiw==}
+  /@prisma/client@5.0.0(prisma@5.0.0):
+    resolution: {integrity: sha512-XlO5ELNAQ7rV4cXIDJUNBEgdLwX3pjtt9Q/RHqDpGf43szpNJx2hJnggfFs7TKNx0cOFsl6KJCSfqr5duEU/bQ==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -1639,6 +1639,7 @@ packages:
       prisma:
         optional: true
     dependencies:
+      '@prisma/engines-version': 4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584
       prisma: 5.0.0
     dev: false
 
@@ -1651,6 +1652,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@prisma/engines-version@4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584:
+    resolution: {integrity: sha512-HHiUF6NixsldsP3JROq07TYBLEjXFKr6PdH8H4gK/XAoTmIplOJBCgrIUMrsRAnEuGyRoRLXKXWUb943+PFoKQ==}
+    dev: false
 
   /@prisma/engines@4.16.1:
     resolution: {integrity: sha512-gpZG0kGGxfemgvK/LghHdBIz+crHkZjzszja94xp4oytpsXrgt/Ice82MvPsWMleVIniKuARrowtsIsim0PFJQ==}
@@ -5799,7 +5804,7 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /nestjs-prisma@0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.11.0)(prisma@5.0.0):
+  /nestjs-prisma@0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.0.0)(prisma@5.0.0):
     resolution: {integrity: sha512-2cgGHnTwURGQOuuD2FtUNpQTk7yAWXQiPDYAgVIG/wn1kH8oXFQeb89c926LaOjEO+XqZa9dq7Ch1XFQN7bSvw==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -5809,7 +5814,7 @@ packages:
       '@angular-devkit/core': 13.3.11
       '@angular-devkit/schematics': 13.3.11
       '@nestjs/common': 10.1.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@prisma/client': 5.11.0(prisma@5.0.0)
+      '@prisma/client': 5.0.0(prisma@5.0.0)
       '@schematics/angular': 13.3.11
       prisma: 5.0.0
     transitivePeerDependencies:
