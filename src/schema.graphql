@@ -61,7 +61,6 @@ type PageInfo {
 }
 
 type Post {
-  author: User
   content: String
 
   """Identifies the date and time when the object was created."""
@@ -72,6 +71,7 @@ type Post {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
+  user: User!
 }
 
 type PostConnection {
@@ -109,10 +109,10 @@ type Query {
   userPosts: [Post!]!
 }
 
-"""User role"""
-enum Role {
-  ADMIN
-  USER
+"""Request role"""
+enum RequestType {
+  EXCLUSIVE
+  HYPER_EXCLUSIVE
 }
 
 input SignupInput {
@@ -147,7 +147,7 @@ type User {
   id: ID!
   lastname: String
   posts: [Post!]
-  role: Role!
+  role: RequestType!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!

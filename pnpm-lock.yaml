@@ -10,7 +10,7 @@ dependencies:
     version: 4.10.1(graphql@16.8.1)
   '@devoxa/prisma-relay-cursor-connection':
     specifier: 2.2.3
-    version: 2.2.3(@prisma/client@5.0.0)
+    version: 2.2.3(@prisma/client@5.12.1)
   '@nestjs/apollo':
     specifier: 12.0.7
     version: 12.0.7(@apollo/server@4.10.1)(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(@nestjs/graphql@12.0.8)(graphql@16.8.1)
@@ -39,8 +39,8 @@ dependencies:
     specifier: 7.1.2
     version: 7.1.2(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
   '@prisma/client':
-    specifier: 5.0.0
-    version: 5.0.0(prisma@5.0.0)
+    specifier: 5.12.1
+    version: 5.12.1(prisma@5.12.1)
   bcrypt:
     specifier: 5.1.0
     version: 5.1.0
@@ -61,7 +61,7 @@ dependencies:
     version: 2.0.0(graphql@16.8.1)
   nestjs-prisma:
     specifier: 0.22.0-dev.0
-    version: 0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.0.0)(prisma@5.0.0)
+    version: 0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.12.1)(prisma@5.12.1)
   passport:
     specifier: 0.6.0
     version: 0.6.0
@@ -134,8 +134,8 @@ devDependencies:
     specifier: 2.8.8
     version: 2.8.8
   prisma:
-    specifier: 5.0.0
-    version: 5.0.0
+    specifier: 5.12.1
+    version: 5.12.1
   prisma-dbml-generator:
     specifier: 0.11.1
     version: 0.11.1
@@ -822,12 +822,12 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@devoxa/prisma-relay-cursor-connection@2.2.3(@prisma/client@5.0.0):
+  /@devoxa/prisma-relay-cursor-connection@2.2.3(@prisma/client@5.12.1):
     resolution: {integrity: sha512-//BbdW4h0HGWRDMW6F5kwL5GBuX+tBHZI4lgSXWuw/Txvkz4/gBSKG6bu8QAGmovhz3dCDKbh6VCnH7xLb0QlA==}
     peerDependencies:
       '@prisma/client': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
-      '@prisma/client': 5.0.0(prisma@5.0.0)
+      '@prisma/client': 5.12.1(prisma@5.12.1)
       graphql-fields: 2.0.3
     dev: false
 
@@ -1629,8 +1629,8 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: true
 
-  /@prisma/client@5.0.0(prisma@5.0.0):
-    resolution: {integrity: sha512-XlO5ELNAQ7rV4cXIDJUNBEgdLwX3pjtt9Q/RHqDpGf43szpNJx2hJnggfFs7TKNx0cOFsl6KJCSfqr5duEU/bQ==}
+  /@prisma/client@5.12.1(prisma@5.12.1):
+    resolution: {integrity: sha512-6/JnizEdlSBxDIdiLbrBdMW5NqDxOmhXAJaNXiPpgzAPr/nLZResT6MMpbOHLo5yAbQ1Vv5UU8PTPRzb0WIxdA==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -1639,8 +1639,7 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584
-      prisma: 5.0.0
+      prisma: 5.12.1
     dev: false
 
   /@prisma/debug@4.16.1:
@@ -1653,18 +1652,25 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/engines-version@4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584:
-    resolution: {integrity: sha512-HHiUF6NixsldsP3JROq07TYBLEjXFKr6PdH8H4gK/XAoTmIplOJBCgrIUMrsRAnEuGyRoRLXKXWUb943+PFoKQ==}
-    dev: false
+  /@prisma/debug@5.12.1:
+    resolution: {integrity: sha512-kd/wNsR0klrv79o1ITsbWxYyh4QWuBidvxsXSParPsYSu0ircUmNk3q4ojsgNc3/81b0ozg76iastOG43tbf8A==}
+
+  /@prisma/engines-version@5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab:
+    resolution: {integrity: sha512-6yvO8s80Tym61aB4QNtYZfWVmE3pwqe807jEtzm8C5VDe7nw8O1FGX3TXUaXmWV0fQTIAfRbeL2Gwrndabp/0g==}
 
   /@prisma/engines@4.16.1:
     resolution: {integrity: sha512-gpZG0kGGxfemgvK/LghHdBIz+crHkZjzszja94xp4oytpsXrgt/Ice82MvPsWMleVIniKuARrowtsIsim0PFJQ==}
     requiresBuild: true
     dev: true
 
-  /@prisma/engines@5.0.0:
-    resolution: {integrity: sha512-kyT/8fd0OpWmhAU5YnY7eP31brW1q1YrTGoblWrhQJDiN/1K+Z8S1kylcmtjqx5wsUGcP1HBWutayA/jtyt+sg==}
+  /@prisma/engines@5.12.1:
+    resolution: {integrity: sha512-HQDdglLw2bZR/TXD2Y+YfDMvi5Q8H+acbswqOsWyq9pPjBLYJ6gzM+ptlTU/AV6tl0XSZLU1/7F4qaWa8bqpJA==}
     requiresBuild: true
+    dependencies:
+      '@prisma/debug': 5.12.1
+      '@prisma/engines-version': 5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab
+      '@prisma/fetch-engine': 5.12.1
+      '@prisma/get-platform': 5.12.1
 
   /@prisma/fetch-engine@4.16.1:
     resolution: {integrity: sha512-sivgi9oomELapqJkup+nyMH9J3OVAyKxrw4YV8vtx5KPWVRSWIoBvRd1juKFswYiUmRhpY8446ZUvYvCBT7vyQ==}
@@ -1690,6 +1696,13 @@ packages:
       - encoding
       - supports-color
     dev: true
+
+  /@prisma/fetch-engine@5.12.1:
+    resolution: {integrity: sha512-qSs3KcX1HKcea1A+hlJVK/ljj0PNIUHDxAayGMvgJBqmaN32P9tCidlKz1EGv6WoRFICYnk3Dd/YFLBwnFIozA==}
+    dependencies:
+      '@prisma/debug': 5.12.1
+      '@prisma/engines-version': 5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab
+      '@prisma/get-platform': 5.12.1
 
   /@prisma/generator-helper@4.16.1:
     resolution: {integrity: sha512-vMfNTD7hU0sQv/G5i8PVazAfUIaYh/xsbbnVk4Af0jSW6w6gZH95V5sbK0GSZry+D+pqXN3EiTqRFzreuzzCqg==}
@@ -1718,6 +1731,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@prisma/get-platform@5.12.1:
+    resolution: {integrity: sha512-pgIR+pSvhYHiUcqXVEZS31NrFOTENC9yFUdEAcx7cdQBoZPmHVjtjN4Ss6NzVDMYPrKJJ51U14EhEoeuBlMioQ==}
+    dependencies:
+      '@prisma/debug': 5.12.1
 
   /@prisma/internals@4.16.1:
     resolution: {integrity: sha512-Ut6O08c7RzLXRwb03OcZEMNlr2VGNJ03DI3n2PG2xxgfMum/U1AoHXQ552gobb/SajYw1Cn5ZzVrhR9sCXo89A==}
@@ -5804,7 +5822,7 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /nestjs-prisma@0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.0.0)(prisma@5.0.0):
+  /nestjs-prisma@0.22.0-dev.0(@nestjs/common@10.1.0)(@prisma/client@5.12.1)(prisma@5.12.1):
     resolution: {integrity: sha512-2cgGHnTwURGQOuuD2FtUNpQTk7yAWXQiPDYAgVIG/wn1kH8oXFQeb89c926LaOjEO+XqZa9dq7Ch1XFQN7bSvw==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -5814,9 +5832,9 @@ packages:
       '@angular-devkit/core': 13.3.11
       '@angular-devkit/schematics': 13.3.11
       '@nestjs/common': 10.1.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@prisma/client': 5.0.0(prisma@5.0.0)
+      '@prisma/client': 5.12.1(prisma@5.12.1)
       '@schematics/angular': 13.3.11
-      prisma: 5.0.0
+      prisma: 5.12.1
     transitivePeerDependencies:
       - chokidar
     dev: false
@@ -6251,13 +6269,13 @@ packages:
       - supports-color
     dev: true
 
-  /prisma@5.0.0:
-    resolution: {integrity: sha512-KYWk83Fhi1FH59jSpavAYTt2eoMVW9YKgu8ci0kuUnt6Dup5Qy47pcB4/TLmiPAbhGrxxSz7gsSnJcCmkyPANA==}
+  /prisma@5.12.1:
+    resolution: {integrity: sha512-SkMnb6wyIxTv9ACqiHBI2u9gD6y98qXRoCoLEnZsF6yee5Qg828G+ARrESN+lQHdw4maSZFFSBPPDpvSiVTo0Q==}
     engines: {node: '>=16.13'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 5.0.0
+      '@prisma/engines': 5.12.1
 
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
