@@ -14,5 +14,5 @@ export class Post extends BaseModel {
   published: boolean;
 
   @Field(() => User, { nullable: true })
-  author?: User | null;
+  user?: User | null;
 }
