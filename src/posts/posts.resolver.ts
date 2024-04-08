@@ -39,12 +39,12 @@ export class PostsResolver {
     @UserEntity() user: User,
     @Args('data') data: CreatePostInput,
   ) {
-    const newPost = this.prisma.post.create({
+    const newPost = this.prisma.profile.create({
       data: {
         published: true,
         title: data.title,
         content: data.content,
-        authorId: user.id,
+        userId: user.id,
       },
     });
     pubSub.publish('postCreated', { postCreated: newPost });
@@ -65,8 +65,8 @@ export class PostsResolver {
   ) {
     const a = await findManyCursorConnection(
       (args) =>
-        this.prisma.post.findMany({
-          include: { author: true },
+        this.prisma.profile.findMany({
+          include: { user: true },
           where: {
             published: true,
             title: { contains: query || '' },
@@ -75,7 +75,7 @@ export class PostsResolver {
           ...args,
         }),
       () =>
-        this.prisma.post.count({
+        this.prisma.profile.count({
           where: {
             published: true,
             title: { contains: query || '' },
@@ -90,7 +90,7 @@ export class PostsResolver {
   userPosts(@Args() id: UserIdArgs) {
     return this.prisma.user
       .findUnique({ where: { id: id.userId } })
-      .posts({ where: { published: true } });
+      .profile({ where: { published: true } });
 
     // or
     // return this.prisma.posts.findMany({
@@ -103,11 +103,11 @@ export class PostsResolver {
 
   @Query(() => Post)
   async post(@Args() id: PostIdArgs) {
-    return this.prisma.post.findUnique({ where: { id: id.postId } });
+    return this.prisma.profile.findUnique({ where: { id: id.postId } });
   }
 
-  @ResolveField('author', () => User)
+  @ResolveField('user', () => User)
   async author(@Parent() post: Post) {
-    return this.prisma.post.findUnique({ where: { id: post.id } }).author();
+    return this.prisma.profile.findUnique({ where: { id: post.id } }).user();
   }
 }
