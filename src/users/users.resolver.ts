@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { User } from './models/user.model';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { SignupInput } from 'src/auth/dto/signup.input';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
@@ -30,9 +31,9 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
-  async updateUser(
+  async upsertUser(
     @UserEntity() user: User,
-    @Args('data') newUserData: UpdateUserInput,
+    @Args('data') newUserData: SignupInput,
   ) {
     return this.usersService.updateUser(user.id, newUserData);
   }

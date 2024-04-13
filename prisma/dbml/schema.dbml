@@ -7,7 +7,10 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   email String [unique, not null]
+  phone String [unique, not null]
+  country String [not null]
   password String [not null]
+  tAndCConsent Boolean [not null]
   firstname String
   lastname String
   profile Profile

@@ -18,18 +18,21 @@ enum RequestType {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  email     String    @unique
-  password  String
-  firstname String?
-  lastname  String?
-  profile   Profile?
-  wallet    Wallet?
-  chats     Chat[]
-  prompts   Prompt[]
-  Request   Request[]
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  email        String    @unique
+  phone        String    @unique
+  country      String
+  password     String
+  tAndCConsent Boolean
+  firstname    String?
+  lastname     String?
+  profile      Profile?
+  wallet       Wallet?
+  chats        Chat[]
+  prompts      Prompt[]
+  Request      Request[]
 }
 
 model Profile {
