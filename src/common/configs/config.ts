@@ -21,9 +21,10 @@ const config: Config = {
     sortSchema: true,
   },
   security: {
-    expiresIn: '2m',
+    expiresIn: '200m',
     refreshIn: '7d',
     bcryptSaltOrRound: 10,
+    defaultPassword: '73b4894b-edb4-4c08-8a4e-084896cb8695',
   },
 };
 

@@ -3,28 +3,29 @@ import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
 export class SignupInput {
-  @Field({ nullable: false })
-  @IsPhoneNumber()
-  phone: string;
-
   @Field()
-  @IsEmail()
-  email: string;
+  @IsNotEmpty()
+  @IsPhoneNumber()
+  id: string;
 
   @Field()
   @IsNotEmpty()
-  @MinLength(8)
-  password: string;
+  @IsPhoneNumber()
+  phone: string;
+
+  @Field({ nullable: true })
+  @IsEmail()
+  email: string;
+
+  @Field({ nullable: true })
+  country: string;
+
+  @Field({ nullable: true })
+  tAndCConsent: boolean;
 
   @Field({ nullable: true })
   firstname?: string;
 
   @Field({ nullable: true })
   lastname?: string;
-
-  @Field()
-  country: string;
-
-  @Field()
-  tAndCConsent: boolean;
 }

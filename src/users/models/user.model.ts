@@ -5,7 +5,7 @@ import {
   HideField,
   Field,
 } from '@nestjs/graphql';
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsPhoneNumber } from 'class-validator';
 import { Post } from '../../posts/models/post.model';
 import { BaseModel } from '../../common/models/base.model';
 import { RequestType } from '@prisma/client';
@@ -17,6 +17,14 @@ registerEnumType(RequestType, {
 
 @ObjectType()
 export class User extends BaseModel {
+  @Field()
+  @IsPhoneNumber()
+  id: string;
+
+  @Field()
+  @IsPhoneNumber()
+  phone: string;
+
   @Field()
   @IsEmail()
   email: string;
@@ -35,4 +43,10 @@ export class User extends BaseModel {
 
   @HideField()
   password: string;
+
+  @Field()
+  country: string;
+
+  @Field()
+  tAndCConsent: boolean;
 }

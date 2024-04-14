@@ -3,7 +3,6 @@ import { Prisma, User } from '@prisma/client';
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -24,21 +23,21 @@ export class AuthService {
   ) {}
 
   async createUser(payload: SignupInput): Promise<Token> {
-    const hashedPassword = await this.passwordService.hashPassword(
-      payload.password,
-    );
-
     try {
       const user = await this.prisma.user.create({
         data: {
           ...payload,
-          password: hashedPassword,
+          password:
+            this.configService.get<SecurityConfig>('security').defaultPassword,
         },
       });
 
-      return this.generateTokens({
-        userId: user.id,
-      });
+      return {
+        ...this.generateTokens({
+          userId: user.id,
+        }),
+        ...user,
+      };
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -50,20 +49,11 @@ export class AuthService {
     }
   }
 
-  async login(email: string, password: string): Promise<Token> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+  async login(phone: string, id: string): Promise<Token> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
-      throw new NotFoundException(`No user found for email: ${email}`);
-    }
-
-    const passwordValid = await this.passwordService.validatePassword(
-      password,
-      user.password,
-    );
-
-    if (!passwordValid) {
-      throw new BadRequestException('Invalid password');
+      throw new NotFoundException(`No user found for phone: ${phone}`);
     }
 
     return this.generateTokens({

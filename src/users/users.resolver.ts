@@ -31,7 +31,16 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
-  async upsertUser(
+  async createUser(
+    @UserEntity() user: User,
+    @Args('data') newUserData: SignupInput,
+  ) {
+    return this.usersService.updateUser(user.id, newUserData);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => User)
+  async updateUser(
     @UserEntity() user: User,
     @Args('data') newUserData: SignupInput,
   ) {
