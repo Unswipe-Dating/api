@@ -13,6 +13,13 @@ import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
 import { RefreshTokenInput } from './dto/refresh-token.input';
 import { User } from '../users/models/user.model';
+import msg91 from 'msg91';
+
+const templateId = '661ed944d6fc050636222b82';
+const otpLength = 6;
+const msg91AuthKey = '420161AEOVz4bOJl661ed50bP1';
+
+msg91.initialize({ authKey: msg91AuthKey });
 
 @Resolver(() => Auth)
 export class AuthResolver {
@@ -53,10 +60,17 @@ export class AuthResolver {
   }
 
   @Mutation(() => Token)
-  async validateOTP(@Args('data') { id, otp }: LoginInput) {
+  async validateOTP(@Args('data') { id, otp, phone }: LoginInput) {
     // TODO: Double check with external OTP provider here.
     console.log('OTP recieved for login:', otp);
     const user = await this.userService.createUserIfDoesntExist(id);
+    try {
+      const msg91Instance = msg91.getOTP(templateId, { length: otpLength });
+      const result = await msg91Instance.verify(phone, otp);
+      console.log('result', result);
+    } catch (error) {
+      console.log('error validating OTP', error?.response);
+    }
     const { accessToken, refreshToken } = await this.auth.generateTokens({
       userId: user.id,
     });
@@ -70,6 +84,13 @@ export class AuthResolver {
   async requestOTP(@Args('data') { id, phone }: LoginInput) {
     // TODO: Use the third party provider to request for OTP to the given phone number.
     console.log('Requesting OTP on: ', phone, ' id: ', id);
+    const otp = msg91.getOTP(templateId, { length: otpLength });
+    console.log('otp', otp, msg91);
+    const result = await otp.send(phone, {
+      templateId: templateId,
+      length: otpLength,
+    });
+    console.log('result', result);
     return 'ok';
   }
 }

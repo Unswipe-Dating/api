@@ -22,10 +22,4 @@ export class SignupInput {
 
   @Field({ nullable: true })
   tAndCConsent: boolean;
-
-  @Field({ nullable: true })
-  firstname?: string;
-
-  @Field({ nullable: true })
-  lastname?: string;
 }
