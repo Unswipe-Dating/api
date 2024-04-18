@@ -6,7 +6,7 @@ import {
   Field,
 } from '@nestjs/graphql';
 import { IsEmail, IsPhoneNumber } from 'class-validator';
-import { Post } from '../../posts/models/post.model';
+import { Profile } from '../../profiles/models/profile.model';
 import { BaseModel } from '../../common/models/base.model';
 import { RequestType } from '@prisma/client';
 
@@ -38,8 +38,8 @@ export class User extends BaseModel {
   @Field(() => RequestType)
   role: RequestType;
 
-  @Field(() => [Post], { nullable: true })
-  posts?: [Post] | null;
+  @Field(() => [Profile], { nullable: true })
+  posts?: [Profile] | null;
 
   @HideField()
   password: string;

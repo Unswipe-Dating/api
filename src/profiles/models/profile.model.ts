@@ -3,7 +3,7 @@ import { User } from '../../users/models/user.model';
 import { BaseModel } from '../../common/models/base.model';
 
 @ObjectType()
-export class Post extends BaseModel {
+export class Profile extends BaseModel {
   @Field()
   title: string;
 

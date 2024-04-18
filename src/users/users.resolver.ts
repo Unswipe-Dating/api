@@ -59,9 +59,4 @@ export class UsersResolver {
       changePassword,
     );
   }
-
-  @ResolveField('posts')
-  posts(@Parent() author: User) {
-    return this.prisma.user.findUnique({ where: { id: author.id } }).profile();
-  }
 }
