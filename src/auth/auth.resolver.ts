@@ -49,7 +49,9 @@ export class AuthResolver {
 
   @Mutation(() => Token)
   async refreshToken(@Args('data') { token, userId }: RefreshTokenInput) {
-    //TODO: check if userId, if not throw
+    if (!userId) {
+      throw new Error('userId is required to refresh tokens');
+    }
     console.log('Refresh accessToken for user:', userId);
     return this.auth.refreshToken(token);
   }
@@ -61,7 +63,6 @@ export class AuthResolver {
 
   @Mutation(() => Token)
   async validateOTP(@Args('data') { id, otp, phone }: LoginInput) {
-    // TODO: Double check with external OTP provider here.
     console.log('OTP recieved for login:', otp);
     const user = await this.userService.createUserIfDoesntExist(id);
     try {
@@ -82,7 +83,6 @@ export class AuthResolver {
   }
   @Mutation(() => String)
   async requestOTP(@Args('data') { id, phone }: LoginInput) {
-    // TODO: Use the third party provider to request for OTP to the given phone number.
     console.log('Requesting OTP on: ', phone, ' id: ', id);
     const otp = msg91.getOTP(templateId, { length: otpLength });
     console.log('otp', otp, msg91);
