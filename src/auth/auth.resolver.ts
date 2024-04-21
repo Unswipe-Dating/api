@@ -13,17 +13,12 @@ import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
 import { RefreshTokenInput } from './dto/refresh-token.input';
 import { User } from '../users/models/user.model';
-import msg91 from 'msg91';
 import otpless from 'otpless-node-js-auth-sdk';
 import { OTPLessConfig } from 'src/common/configs/config.interface';
 import { ConfigService } from '@nestjs/config';
 import { Otp } from './models/otp.model';
 
-const templateId = '661ed944d6fc050636222b82';
 const otpLength = 6;
-const msg91AuthKey = '420161AEOVz4bOJl661ed50bP1';
-
-msg91.initialize({ authKey: msg91AuthKey });
 
 @Resolver(() => Auth)
 export class AuthResolver {
