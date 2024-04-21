@@ -56,8 +56,6 @@ model Profile {
   photoURLs          String[]
   datingPreference   DatingPreference?
   interests          Json?
-  title              String?
-  content            String?
   user               User              @relation(fields: [userId], references: [id])
   userId             String            @unique
 }

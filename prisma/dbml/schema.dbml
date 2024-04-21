@@ -35,8 +35,6 @@ Table Profile {
   photoURLs String[] [not null]
   datingPreference DatingPreference
   interests Json
-  title String
-  content String
   user User [not null]
   userId String [unique, not null]
 }

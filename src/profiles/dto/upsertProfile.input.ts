@@ -1,21 +1,32 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { BaseModel } from '../../common/models/base.model';
-import { IsNotEmpty } from 'class-validator';
+import {
+  InputType,
+  Field,
+  registerEnumType,
+  ObjectType,
+} from '@nestjs/graphql';
 import { DatingPreference } from '@prisma/client';
+import { IsNotEmpty } from 'class-validator';
 
 registerEnumType(DatingPreference, {
   name: 'DatingPreference',
   description: 'Dating Preference enum',
 });
 
+@InputType()
 @ObjectType()
-export class Profile extends BaseModel {
+export class UpsertProfileInput {
   @Field()
   @IsNotEmpty()
   userId: string;
 
   @Field({ nullable: true })
   id: string;
+
+  @Field({ nullable: true })
+  createdAt: string;
+
+  @Field({ nullable: true })
+  updatedAt: string;
 
   @Field({ nullable: true })
   completed: boolean;

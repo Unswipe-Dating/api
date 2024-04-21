@@ -1,42 +1,44 @@
 import { PrismaService } from 'nestjs-prisma';
-import { Resolver, Query, Args, Subscription, Mutation } from '@nestjs/graphql';
-import { PubSub } from 'graphql-subscriptions';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { UserEntity } from '../common/decorators/user.decorator';
-import { User } from '../users/models/user.model';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { PostIdArgs } from './args/post-id.args';
 import { UserIdArgs } from './args/user-id.args';
 import { Profile } from './models/profile.model';
-import { CreateProfileInput } from './dto/createProfile.input';
-
-const pubSub = new PubSub();
+import { UpsertProfileInput } from './dto/upsertProfile.input';
+import { UploadPhotosInput } from './dto/uploadPhoto.input';
 
 @Resolver(() => Profile)
+@UseGuards(GqlAuthGuard)
 export class ProfilesResolver {
   constructor(private prisma: PrismaService) {}
 
-  @Subscription(() => Profile)
-  postCreated() {
-    return pubSub.asyncIterator('postCreated');
-  }
-
-  @UseGuards(GqlAuthGuard)
   @Mutation(() => Profile)
-  async createProfile(
-    @UserEntity() user: User,
-    @Args('data') data: CreateProfileInput,
-  ) {
-    const newProfile = this.prisma.profile.create({
-      data: {
-        completed: false,
-        name: '',
-        showTruncatedName: false,
-        userId: user.id,
+  @UseGuards(GqlAuthGuard)
+  async upsertProfile(@Args('data') data: UpsertProfileInput) {
+    const newProfile = this.prisma.profile.upsert({
+      create: {
+        ...data,
+        userId: data.userId,
+      },
+      update: {
+        ...data,
+        userId: data.userId,
+      },
+      where: {
+        id: data.id,
       },
     });
     return newProfile;
   }
+
+  @Mutation(() => String)
+  async uploadProfilePhotos(@Args('data') data: UploadPhotosInput) {
+    // TODO: update logic here with working multi-upload.
+    console.log('debug', data);
+    return 'ok';
+  }
+
   @Query(() => Profile)
   userProfile(@Args() id: UserIdArgs) {
     return this.prisma.user.findUnique({ where: { id: id.userId } });

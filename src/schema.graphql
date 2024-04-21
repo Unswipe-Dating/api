@@ -16,15 +16,17 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
-input CreateProfileInput {
-  content: String!
-  title: String!
-}
-
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+"""Dating Preference enum"""
+enum DatingPreference {
+  MEN
+  NONBINARY
+  WOMEN
+}
 
 """
 A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
@@ -40,13 +42,14 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
-  createProfile(data: CreateProfileInput!): Profile!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
   refreshToken(data: RefreshTokenInput!): Token!
   requestOTP(data: LoginInput!): Otp!
   signup(data: SignupInput!): Auth!
   updateUser(data: SignupInput!): User!
+  uploadProfilePhotos(data: UploadPhotosInput!): String!
+  upsertProfile(data: UpsertProfileInput!): Profile!
   validateOTP(data: LoginInput!): Token
 }
 
@@ -55,17 +58,23 @@ type Otp {
 }
 
 type Profile {
-  content: String
+  blockedListUserIds: [String!]
+  completed: Boolean
 
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
-  id: ID!
-  published: Boolean!
-  title: String!
+  datingPreference: DatingPreference
+  dob: String
+  gender: String
+  id: String
+  interests: String
+  name: String
+  pronouns: String
+  showTruncatedName: Boolean
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
-  user: User
+  userId: String!
 }
 
 type Query {
@@ -95,16 +104,32 @@ input SignupInput {
   tAndCConsent: Boolean
 }
 
-type Subscription {
-  postCreated: Profile!
-}
-
 type Token {
   """JWT access token"""
   accessToken: JWT!
 
   """JWT refresh token"""
   refreshToken: JWT!
+}
+
+input UploadPhotosInput {
+  id: String!
+}
+
+input UpsertProfileInput {
+  blockedListUserIds: [String!]
+  completed: Boolean
+  createdAt: String
+  datingPreference: DatingPreference
+  dob: String
+  gender: String
+  id: String
+  interests: String
+  name: String
+  pronouns: String
+  showTruncatedName: Boolean
+  updatedAt: String
+  userId: String!
 }
 
 type User {
