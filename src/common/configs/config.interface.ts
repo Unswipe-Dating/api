@@ -4,6 +4,12 @@ export interface Config {
   swagger: SwaggerConfig;
   graphql: GraphqlConfig;
   security: SecurityConfig;
+  otpless: OTPLessConfig;
+}
+
+export interface OTPLessConfig {
+  clientId: string;
+  clientSecret: string;
 }
 
 export interface NestConfig {

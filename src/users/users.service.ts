@@ -39,7 +39,6 @@ export class UsersService {
         tAndCConsent: false,
       });
     }
-    console.log('DEBUG', user);
     return user;
   }
 

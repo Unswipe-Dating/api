@@ -15,4 +15,7 @@ export class LoginInput {
 
   @Field({ nullable: true })
   otp: string;
+
+  @Field({ nullable: true })
+  otpOrderId: string;
 }

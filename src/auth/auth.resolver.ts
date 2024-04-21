@@ -14,6 +14,10 @@ import { SignupInput } from './dto/signup.input';
 import { RefreshTokenInput } from './dto/refresh-token.input';
 import { User } from '../users/models/user.model';
 import msg91 from 'msg91';
+import otpless from 'otpless-node-js-auth-sdk';
+import { OTPLessConfig } from 'src/common/configs/config.interface';
+import { ConfigService } from '@nestjs/config';
+import { Otp } from './models/otp.model';
 
 const templateId = '661ed944d6fc050636222b82';
 const otpLength = 6;
@@ -26,6 +30,7 @@ export class AuthResolver {
   constructor(
     private readonly auth: AuthService,
     private readonly userService: UsersService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Mutation(() => Auth)
@@ -61,36 +66,61 @@ export class AuthResolver {
     return await this.auth.getUserFromToken(auth.accessToken);
   }
 
-  @Mutation(() => Token)
-  async validateOTP(@Args('data') { id, otp, phone }: LoginInput) {
+  @Mutation(() => Token, { nullable: true })
+  async validateOTP(@Args('data') { id, otp, phone, otpOrderId }: LoginInput) {
     console.log('OTP recieved for login:', otp);
     const user = await this.userService.createUserIfDoesntExist(id);
+    const otplessConfig = this.configService.get<OTPLessConfig>('otpless');
     try {
-      const msg91Instance = msg91.getOTP(templateId, { length: otpLength });
-      const result = await msg91Instance.verify(phone, otp);
-      console.log('result', result);
+      const result = await otpless.verifyOTP(
+        undefined,
+        phone,
+        otpOrderId,
+        otp,
+        otplessConfig.clientId,
+        otplessConfig.clientSecret,
+      );
+      if (result.isOTPVerified) {
+        console.log('result', result);
+        const { accessToken, refreshToken } = await this.auth.generateTokens({
+          userId: user.id,
+        });
+
+        return {
+          accessToken,
+          refreshToken,
+        };
+      } else {
+        console.log('error validating otp', result);
+        return null;
+      }
     } catch (error) {
       console.log('error validating OTP', error?.response);
     }
-    const { accessToken, refreshToken } = await this.auth.generateTokens({
-      userId: user.id,
-    });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
-  @Mutation(() => String)
+  @Mutation(() => Otp)
   async requestOTP(@Args('data') { id, phone }: LoginInput) {
     console.log('Requesting OTP on: ', phone, ' id: ', id);
-    const otp = msg91.getOTP(templateId, { length: otpLength });
-    console.log('otp', otp, msg91);
-    const result = await otp.send(phone, {
-      templateId: templateId,
-      length: otpLength,
-    });
+    const otplessConfig = this.configService.get<OTPLessConfig>('otpless');
+    console.log(
+      'otplessConfig',
+      otplessConfig,
+      otpLength,
+      phone,
+      otpless.sendOTP,
+    );
+    const result = await otpless.sendOTP(
+      phone,
+      undefined,
+      'SMS',
+      'hash',
+      undefined,
+      undefined,
+      otpLength,
+      otplessConfig.clientId,
+      otplessConfig.clientSecret,
+    );
     console.log('result', result);
-    return 'ok';
+    return result;
   }
 }

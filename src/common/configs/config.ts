@@ -26,6 +26,10 @@ const config: Config = {
     bcryptSaltOrRound: 10,
     defaultPassword: '73b4894b-edb4-4c08-8a4e-084896cb8695',
   },
+  otpless: {
+    clientId: '6B06C2ZKHM8R6D2SRG434K1RITXBJ37F',
+    clientSecret: '14ot4tu6xecx8ojazk29arh2i0opc3lq',
+  },
 };
 
 export default (): Config => config;
