@@ -16,7 +16,7 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
-input CreatePostInput {
+input CreateProfileInput {
   content: String!
   title: String!
 }
@@ -32,35 +32,29 @@ A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 scalar JWT
 
 input LoginInput {
-  email: String!
-  password: String!
+  id: String!
+  otp: String
+  otpOrderId: String
+  phone: String!
 }
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
-  createPost(data: CreatePostInput!): Post!
+  createProfile(data: CreateProfileInput!): Profile!
+  createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
-  refreshToken(token: JWT!): Token!
+  refreshToken(data: RefreshTokenInput!): Token!
+  requestOTP(data: LoginInput!): Otp!
   signup(data: SignupInput!): Auth!
-  updateUser(data: UpdateUserInput!): User!
+  updateUser(data: SignupInput!): User!
+  validateOTP(data: LoginInput!): Token
 }
 
-"""
-Possible directions in which to order a list of items when provided an `orderBy` argument.
-"""
-enum OrderDirection {
-  asc
-  desc
+type Otp {
+  orderId: String!
 }
 
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-}
-
-type Post {
+type Profile {
   content: String
 
   """Identifies the date and time when the object was created."""
@@ -71,42 +65,20 @@ type Post {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
-  user: User!
-}
-
-type PostConnection {
-  edges: [PostEdge!]
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PostEdge {
-  cursor: String!
-  node: Post!
-}
-
-input PostOrder {
-  direction: OrderDirection!
-  field: PostOrderField!
-}
-
-"""Properties by which post connections can be ordered."""
-enum PostOrderField {
-  content
-  createdAt
-  id
-  published
-  title
-  updatedAt
+  user: User
 }
 
 type Query {
   hello(name: String!): String!
   helloWorld: String!
   me: User!
-  post: Post!
-  publishedPosts(orderBy: PostOrder, query: String): PostConnection!
-  userPosts: [Post!]!
+  profile(profileId: String!): Profile!
+  userProfile(userId: String!): Profile!
+}
+
+input RefreshTokenInput {
+  token: JWT!
+  userId: String
 }
 
 """Request role"""
@@ -116,14 +88,15 @@ enum RequestType {
 }
 
 input SignupInput {
-  email: String!
-  firstname: String
-  lastname: String
-  password: String!
+  country: String
+  email: String
+  id: String!
+  phone: String!
+  tAndCConsent: Boolean
 }
 
 type Subscription {
-  postCreated: Post!
+  postCreated: Profile!
 }
 
 type Token {
@@ -134,20 +107,19 @@ type Token {
   refreshToken: JWT!
 }
 
-input UpdateUserInput {
-  firstname: String
-  lastname: String
-}
-
 type User {
+  country: String!
+
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
   email: String!
   firstname: String
-  id: ID!
+  id: String!
   lastname: String
-  posts: [Post!]
+  phone: String!
+  posts: [Profile!]
   role: RequestType!
+  tAndCConsent: Boolean!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
