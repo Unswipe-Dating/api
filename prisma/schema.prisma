@@ -49,13 +49,13 @@ model Profile {
   completed          Boolean?
   name               String?
   showTruncatedName  Boolean?
-  dob                DateTime?
-  gender             String?
+  dob                String?
+  gender             DatingPreference?
   pronouns           String?
   blockedListUserIds String[]
   photoURLs          String[]
   datingPreference   DatingPreference?
-  interests          Json?
+  interests          String?
   user               User              @relation(fields: [userId], references: [id])
   userId             String            @unique
 }

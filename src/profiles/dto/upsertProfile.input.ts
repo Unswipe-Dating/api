@@ -6,6 +6,7 @@ import {
 } from '@nestjs/graphql';
 import { DatingPreference } from '@prisma/client';
 import { IsNotEmpty } from 'class-validator';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 registerEnumType(DatingPreference, {
   name: 'DatingPreference',
@@ -40,8 +41,8 @@ export class UpsertProfileInput {
   @Field({ nullable: true })
   dob: string;
 
-  @Field({ nullable: true })
-  gender: string;
+  @Field(() => DatingPreference, { nullable: true })
+  gender: DatingPreference;
 
   @Field({ nullable: true })
   pronouns: string;
@@ -52,14 +53,6 @@ export class UpsertProfileInput {
   @Field(() => DatingPreference, { nullable: true })
   datingPreference: DatingPreference;
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLJSONObject, { nullable: true })
   interests: string;
-
-  getInterests(): any {
-    return JSON.parse(this.interests);
-  }
-
-  setInterest(interests: any) {
-    this.interests = JSON.stringify(interests);
-  }
 }

@@ -29,6 +29,11 @@ enum DatingPreference {
 }
 
 """
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+"""
 A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 """
 scalar JWT
@@ -42,14 +47,15 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
+  createProfile(data: UpsertProfileInput!): Profile!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
   refreshToken(data: RefreshTokenInput!): Token!
   requestOTP(data: LoginInput!): Otp!
   signup(data: SignupInput!): Auth!
+  updateProfile(data: UpsertProfileInput!): Profile!
   updateUser(data: SignupInput!): User!
   uploadProfilePhotos(data: UploadPhotosInput!): String!
-  upsertProfile(data: UpsertProfileInput!): Profile!
   validateOTP(data: LoginInput!): Token
 }
 
@@ -65,9 +71,9 @@ type Profile {
   createdAt: DateTime!
   datingPreference: DatingPreference
   dob: String
-  gender: String
+  gender: DatingPreference
   id: String
-  interests: String
+  interests: JSONObject
   name: String
   pronouns: String
   showTruncatedName: Boolean
@@ -122,9 +128,9 @@ input UpsertProfileInput {
   createdAt: String
   datingPreference: DatingPreference
   dob: String
-  gender: String
+  gender: DatingPreference
   id: String
-  interests: String
+  interests: JSONObject
   name: String
   pronouns: String
   showTruncatedName: Boolean

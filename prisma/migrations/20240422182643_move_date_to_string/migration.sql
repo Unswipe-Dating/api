@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Profile" ALTER COLUMN "dob" SET DATA TYPE TEXT;

@@ -70,6 +70,7 @@
     "graphql": "16.8.1",
     "graphql-scalars": "1.22.2",
     "graphql-subscriptions": "2.0.0",
+    "graphql-type-json": "^0.3.2",
     "graphql-upload": "^16.0.0",
     "nestjs-prisma": "0.22.0-dev.0",
     "otpless-node-js-auth-sdk": "^1.0.8",

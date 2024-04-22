@@ -28,13 +28,13 @@ Table Profile {
   completed Boolean
   name String
   showTruncatedName Boolean
-  dob DateTime
-  gender String
+  dob String
+  gender DatingPreference
   pronouns String
   blockedListUserIds String[] [not null]
   photoURLs String[] [not null]
   datingPreference DatingPreference
-  interests Json
+  interests String
   user User [not null]
   userId String [unique, not null]
 }

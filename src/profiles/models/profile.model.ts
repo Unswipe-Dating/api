@@ -1,12 +1,8 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseModel } from '../../common/models/base.model';
 import { IsNotEmpty } from 'class-validator';
 import { DatingPreference } from '@prisma/client';
-
-registerEnumType(DatingPreference, {
-  name: 'DatingPreference',
-  description: 'Dating Preference enum',
-});
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @ObjectType()
 export class Profile extends BaseModel {
@@ -29,8 +25,8 @@ export class Profile extends BaseModel {
   @Field({ nullable: true })
   dob: string;
 
-  @Field({ nullable: true })
-  gender: string;
+  @Field(() => DatingPreference, { nullable: true })
+  gender: DatingPreference;
 
   @Field({ nullable: true })
   pronouns: string;
@@ -41,14 +37,6 @@ export class Profile extends BaseModel {
   @Field(() => DatingPreference, { nullable: true })
   datingPreference: DatingPreference;
 
-  @Field({ nullable: true })
-  interests: string;
-
-  getInterests(): any {
-    return JSON.parse(this.interests);
-  }
-
-  setInterest(interests: any) {
-    this.interests = JSON.stringify(interests);
-  }
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  interests: Record<string, any>;
 }
