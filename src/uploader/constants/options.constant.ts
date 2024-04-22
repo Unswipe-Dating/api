@@ -1,0 +1,1 @@
+export const UPLOADER_OPTIONS = 'UPLOADER_OPTIONS';

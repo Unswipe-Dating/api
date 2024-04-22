@@ -8,7 +8,9 @@ import type {
   CorsConfig,
   NestConfig,
   SwaggerConfig,
+  FileUploadConfig,
 } from './common/configs/config.interface';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,6 +29,10 @@ async function bootstrap() {
   const nestConfig = configService.get<NestConfig>('nest');
   const corsConfig = configService.get<CorsConfig>('cors');
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
+
+  app.use(
+    graphqlUploadExpress(configService.get<FileUploadConfig>('fileUpload')),
+  );
 
   // Swagger Api
   if (swaggerConfig.enabled) {

@@ -5,8 +5,13 @@ export interface Config {
   graphql: GraphqlConfig;
   security: SecurityConfig;
   otpless: OTPLessConfig;
+  fileUpload: FileUploadConfig;
 }
 
+export interface FileUploadConfig {
+  maxFileSize: number;
+  maxFiles: number;
+}
 export interface OTPLessConfig {
   clientId: string;
   clientSecret: string;
