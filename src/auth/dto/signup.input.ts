@@ -14,7 +14,6 @@ export class SignupInput {
   phone: string;
 
   @Field({ nullable: true })
-  @IsEmail()
   email: string;
 
   @Field({ nullable: true })

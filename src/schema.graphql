@@ -96,12 +96,6 @@ input RefreshTokenInput {
   userId: String
 }
 
-"""Request role"""
-enum RequestType {
-  EXCLUSIVE
-  HYPER_EXCLUSIVE
-}
-
 input SignupInput {
   country: String
   email: String
@@ -139,17 +133,13 @@ input UpsertProfileInput {
 }
 
 type User {
-  country: String!
-
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
-  email: String!
   firstname: String
   id: String!
   lastname: String
   phone: String!
-  posts: [Profile!]
-  role: RequestType!
+  profile: Profile
   tAndCConsent: Boolean!
 
   """Identifies the date and time when the object was last updated."""

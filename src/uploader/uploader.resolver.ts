@@ -11,6 +11,7 @@ export class UploadResolver {
     @Args({ name: 'file', type: () => GraphQLUpload })
     { createReadStream, filename }: FileUpload,
   ) {
+    // TODO: upload to S3. And allow multiple images to be uploaded here.
     return new Promise(async (resolve, reject) =>
       createReadStream()
         .pipe(createWriteStream(`./uploads/${filename}`))

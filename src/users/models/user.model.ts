@@ -25,27 +25,17 @@ export class User extends BaseModel {
   @IsPhoneNumber()
   phone: string;
 
-  @Field()
-  @IsEmail()
-  email: string;
-
   @Field(() => String, { nullable: true })
   firstname?: string;
 
   @Field(() => String, { nullable: true })
   lastname?: string;
 
-  @Field(() => RequestType)
-  role: RequestType;
-
-  @Field(() => [Profile], { nullable: true })
-  posts?: [Profile] | null;
+  @Field(() => Profile, { nullable: true })
+  profile?: Profile | null;
 
   @HideField()
   password: string;
-
-  @Field()
-  country: string;
 
   @Field()
   tAndCConsent: boolean;

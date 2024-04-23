@@ -30,10 +30,13 @@ export class AuthResolver {
 
   @Mutation(() => Auth)
   async signup(@Args('data') data: SignupInput) {
-    const { accessToken, refreshToken } = await this.auth.createUser(data);
+    const { accessToken, refreshToken, user } = await this.auth.signupOrLogin(
+      data,
+    );
     return {
       accessToken,
       refreshToken,
+      user,
     };
   }
 

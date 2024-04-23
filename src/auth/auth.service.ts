@@ -12,6 +12,7 @@ import { PasswordService } from './password.service';
 import { SignupInput } from './dto/signup.input';
 import { Token } from './models/token.model';
 import { SecurityConfig } from '../common/configs/config.interface';
+import { Auth } from './models/auth.model';
 
 @Injectable()
 export class AuthService {
@@ -22,21 +23,34 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createUser(payload: SignupInput): Promise<Token> {
+  async signupOrLogin(payload: SignupInput): Promise<Auth> {
     try {
-      const user = await this.prisma.user.create({
-        data: {
-          ...payload,
-          password:
-            this.configService.get<SecurityConfig>('security').defaultPassword,
+      let user = await this.prisma.user.findUnique({
+        where: { id: payload.id },
+        include: {
+          Profile: true,
         },
       });
+
+      if (!user) {
+        user = await this.prisma.user.create({
+          data: {
+            ...payload,
+            password:
+              this.configService.get<SecurityConfig>('security')
+                .defaultPassword,
+          },
+          include: {
+            Profile: true,
+          },
+        });
+      }
 
       return {
         ...this.generateTokens({
           userId: user.id,
         }),
-        ...user,
+        user,
       };
     } catch (e) {
       if (
