@@ -11,7 +11,6 @@ import {
   Logger,
   LoggerService,
 } from '@nestjs/common';
-import sharp from 'sharp';
 import { Readable } from 'stream';
 import { v4 as uuidV4, v5 as uuidV5 } from 'uuid';
 import { UPLOADER_OPTIONS } from './constants/index';
@@ -51,45 +50,6 @@ export class UploaderService {
         .on('data', (data) => buffer.push(data))
         .on('end', () => resolve(Buffer.concat(buffer))),
     );
-  }
-
-  private static async compressImage(
-    buffer: Buffer,
-    ratio?: number,
-  ): Promise<Buffer> {
-    let compressBuffer: sharp.Sharp | Buffer = sharp(buffer).jpeg({
-      mozjpeg: true,
-      chromaSubsampling: '4:4:4',
-    });
-
-    if (ratio) {
-      compressBuffer.resize({
-        width: MAX_WIDTH,
-        height: Math.round(MAX_WIDTH * ratio),
-        fit: 'cover',
-      });
-    }
-
-    compressBuffer = await compressBuffer.toBuffer();
-
-    if (compressBuffer.length > IMAGE_SIZE) {
-      for (let i = 0; i < QUALITY_ARRAY.length; i++) {
-        const quality = QUALITY_ARRAY[i];
-        const smallerBuffer = await sharp(compressBuffer)
-          .jpeg({
-            quality,
-            chromaSubsampling: '4:4:4',
-          })
-          .toBuffer();
-
-        if (smallerBuffer.length <= IMAGE_SIZE || quality === 10) {
-          compressBuffer = smallerBuffer;
-          break;
-        }
-      }
-    }
-
-    return compressBuffer;
   }
 
   /**
