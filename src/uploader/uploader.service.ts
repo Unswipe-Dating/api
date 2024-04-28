@@ -19,7 +19,9 @@ import { IMAGE_SIZE, MAX_WIDTH, QUALITY_ARRAY } from './constants/index';
 import { FileUploadDto } from './dtos/file-upload.dto';
 import { RatioEnum } from './enums/ratio.enum';
 import { IBucketData } from './interfaces/bucket-data.interface';
-import { IOptions } from './interfaces/options.interface';
+import { S3Options } from './interfaces/options.interface';
+import { FileUpload } from 'graphql-upload';
+import { FileUploadType } from 'src/profiles/dto/uploadPhoto.input';
 
 @Injectable()
 export class UploaderService {
@@ -27,7 +29,7 @@ export class UploaderService {
   private readonly bucketData: IBucketData;
   private readonly loggerService: LoggerService;
 
-  constructor(@Inject(UPLOADER_OPTIONS) options: IOptions) {
+  constructor(@Inject(UPLOADER_OPTIONS) options: S3Options) {
     this.client = new S3Client(options.clientConfig);
     this.bucketData = options.bucketData;
     this.loggerService = new Logger(UploaderService.name);
@@ -97,7 +99,7 @@ export class UploaderService {
    */
   public async uploadImage(
     userId: number,
-    file: Promise<FileUploadDto>,
+    file: Promise<FileUploadType>,
     ratio?: RatioEnum,
   ): Promise<string> {
     const { mimetype, createReadStream } = await file;
@@ -110,13 +112,11 @@ export class UploaderService {
     try {
       return await this.uploadFile(
         userId,
-        await UploaderService.compressImage(
-          await UploaderService.streamToBuffer(createReadStream()),
-          ratio,
-        ),
+        await UploaderService.streamToBuffer(createReadStream()),
         '.jpg',
       );
     } catch (error) {
+      console.log('ERROR', error);
       this.loggerService.error(error);
       throw new InternalServerErrorException('Error uploading image');
     }
@@ -164,7 +164,7 @@ export class UploaderService {
           Bucket: this.bucketData.name,
           Body: fileBuffer,
           Key: key,
-          ACL: 'public-read',
+          ACL: 'bucket-owner-full-control', // TODO: tighten this to ACL policy later
         }),
       );
     } catch (error) {

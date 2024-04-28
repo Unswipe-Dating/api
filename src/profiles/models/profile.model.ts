@@ -3,6 +3,7 @@ import { BaseModel } from '../../common/models/base.model';
 import { IsNotEmpty } from 'class-validator';
 import { DatingPreference } from '@prisma/client';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { User } from 'src/users/models/user.model';
 
 @ObjectType()
 export class Profile extends BaseModel {
@@ -39,4 +40,7 @@ export class Profile extends BaseModel {
 
   @Field(() => GraphQLJSONObject, { nullable: true })
   interests: Record<string, any>;
+
+  @Field(() => User, { nullable: true })
+  user?: User;
 }

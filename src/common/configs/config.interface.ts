@@ -1,3 +1,5 @@
+import { S3Options } from 'src/uploader/interfaces';
+
 export interface Config {
   nest: NestConfig;
   cors: CorsConfig;
@@ -6,6 +8,7 @@ export interface Config {
   security: SecurityConfig;
   otpless: OTPLessConfig;
   fileUpload: FileUploadConfig;
+  s3Config: S3Options;
 }
 
 export interface FileUploadConfig {

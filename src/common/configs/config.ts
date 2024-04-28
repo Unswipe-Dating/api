@@ -31,6 +31,21 @@ const config: Config = {
     clientSecret: '14ot4tu6xecx8ojazk29arh2i0opc3lq',
   },
   fileUpload: { maxFileSize: 1000000, maxFiles: 10 },
+  s3Config: {
+    clientConfig: {
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_ID,
+        secretAccessKey: process.env.AWS_SECRET_KEY,
+      },
+    },
+    bucketData: {
+      name: process.env.S3_BUCKET_NAME,
+      folder: process.env.S3_FOLDER,
+      appUuid: process.env.S3_APP_UUID,
+      url: '',
+    },
+  },
 };
 
 export default (): Config => config;

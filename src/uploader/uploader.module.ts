@@ -1,18 +1,12 @@
-/*
-  Free and open source - GNU LGPLv3
-  Copyright © 2022
-  Afonso Barracha
-*/
-
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { UPLOADER_OPTIONS } from './constants/index';
-import { IOptions } from './interfaces/options.interface';
 import { UploaderService } from './uploader.service';
+import { UPLOADER_OPTIONS } from './constants';
+import { S3Options } from './interfaces';
 
 @Global()
 @Module({})
 export class UploaderModule {
-  public static forRoot(options: IOptions): DynamicModule {
+  public static forRoot(options: S3Options): DynamicModule {
     return {
       global: true,
       module: UploaderModule,

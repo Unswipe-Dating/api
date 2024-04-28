@@ -6,11 +6,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
 import { AuthModule } from './auth/auth.module';
+import { UploaderModule } from './uploader/uploader.module';
 import { UsersModule } from './users/users.module';
 import { ProfileModule } from './profiles/profiles.module';
 import config from './common/configs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
+import { S3Options } from './uploader/interfaces';
 
 @Module({
   imports: [
@@ -36,6 +38,21 @@ import { GqlConfigService } from './gql-config.service';
     AuthModule,
     UsersModule,
     ProfileModule,
+    UploaderModule.forRoot({
+      clientConfig: {
+        region: 'ap-southeast-1',
+        credentials: {
+          accessKeyId: '',
+          secretAccessKey: '',
+        },
+      },
+      bucketData: {
+        name: 'test',
+        folder: 'test-folder',
+        appUuid: 'uuid',
+        url: '',
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

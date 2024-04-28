@@ -55,7 +55,7 @@ type Mutation {
   signup(data: SignupInput!): Auth!
   updateProfile(data: UpsertProfileInput!): Profile!
   updateUser(data: SignupInput!): User!
-  uploadProfilePhotos(data: UploadPhotosInput!): String!
+  uploadProfilePhotos(data: UploadProfilePhotosInput!): String!
   validateOTP(data: LoginInput!): Token
 }
 
@@ -80,6 +80,7 @@ type Profile {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
+  user: User
   userId: String!
 }
 
@@ -112,8 +113,11 @@ type Token {
   refreshToken: JWT!
 }
 
-input UploadPhotosInput {
-  id: String!
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UploadProfilePhotosInput {
+  files: [Upload!]!
 }
 
 input UpsertProfileInput {
