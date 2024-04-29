@@ -30,7 +30,7 @@ const config: Config = {
     clientId: '6B06C2ZKHM8R6D2SRG434K1RITXBJ37F',
     clientSecret: '14ot4tu6xecx8ojazk29arh2i0opc3lq',
   },
-  fileUpload: { maxFileSize: 1000000, maxFiles: 10 },
+  fileUpload: { maxFileSize: 10000000, maxFiles: 10 },
   s3Config: {
     clientConfig: {
       region: process.env.AWS_REGION,
