@@ -13,10 +13,10 @@ import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
 import { RefreshTokenInput } from './dto/refresh-token.input';
 import { User } from '../users/models/user.model';
-import otpless from 'otpless-node-js-auth-sdk';
 import { OTPLessConfig } from 'src/common/configs/config.interface';
 import { ConfigService } from '@nestjs/config';
 import { Otp } from './models/otp.model';
+const otpless = require('otpless-node-js-auth-sdk');
 
 const otpLength = 6;
 
@@ -100,13 +100,7 @@ export class AuthResolver {
   async requestOTP(@Args('data') { id, phone }: LoginInput) {
     console.log('Requesting OTP on: ', phone, ' id: ', id);
     const otplessConfig = this.configService.get<OTPLessConfig>('otpless');
-    console.log(
-      'otplessConfig',
-      otplessConfig,
-      otpLength,
-      phone,
-      otpless.sendOTP,
-    );
+    console.log('otplessConfig', otplessConfig, otpLength, phone);
     const result = await otpless.sendOTP(
       phone,
       undefined,
