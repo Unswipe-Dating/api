@@ -16,7 +16,7 @@ import { User } from '../users/models/user.model';
 import { OTPLessConfig } from 'src/common/configs/config.interface';
 import { ConfigService } from '@nestjs/config';
 import { Otp } from './models/otp.model';
-const otpless = require('otpless-node-js-auth-sdk');
+import * as otpless from 'otpless-node-js-auth-sdk';
 
 const otpLength = 6;
 
