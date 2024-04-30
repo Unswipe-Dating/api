@@ -39,4 +39,7 @@ export class User extends BaseModel {
 
   @Field()
   tAndCConsent: boolean;
+
+  @Field()
+  country: string;
 }

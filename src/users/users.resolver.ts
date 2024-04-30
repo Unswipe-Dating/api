@@ -35,7 +35,7 @@ export class UsersResolver {
     @UserEntity() user: User,
     @Args('data') newUserData: SignupInput,
   ) {
-    return this.usersService.updateUser(user.id, newUserData);
+    return this.usersService.updateUser(newUserData?.id, newUserData);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -44,7 +44,7 @@ export class UsersResolver {
     @UserEntity() user: User,
     @Args('data') newUserData: SignupInput,
   ) {
-    return this.usersService.updateUser(user.id, newUserData);
+    return this.usersService.updateUser(newUserData?.id, newUserData);
   }
 
   @UseGuards(GqlAuthGuard)
