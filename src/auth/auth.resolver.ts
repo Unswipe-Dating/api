@@ -109,7 +109,7 @@ export class AuthResolver {
       'SMS',
       'hash',
       undefined,
-      undefined,
+      300, // 5 mins
       otpLength,
       otplessConfig.clientId,
       otplessConfig.clientSecret,
