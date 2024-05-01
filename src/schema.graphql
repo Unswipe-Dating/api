@@ -4,10 +4,11 @@
 
 type Auth {
   """JWT access token"""
-  accessToken: JWT!
+  accessToken: JWT
+  error: String
 
   """JWT refresh token"""
-  refreshToken: JWT!
+  refreshToken: JWT
   user: User!
 }
 
@@ -107,10 +108,11 @@ input SignupInput {
 
 type Token {
   """JWT access token"""
-  accessToken: JWT!
+  accessToken: JWT
+  error: String
 
   """JWT refresh token"""
-  refreshToken: JWT!
+  refreshToken: JWT
 }
 
 """The `Upload` scalar type represents a file upload."""

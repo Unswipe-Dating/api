@@ -90,7 +90,9 @@ export class AuthResolver {
         };
       } else {
         console.log('error validating otp', result);
-        return null;
+        return {
+          error: String(result?.reason),
+        };
       }
     } catch (error) {
       console.log('error validating OTP', error?.response);
