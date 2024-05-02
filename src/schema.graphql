@@ -12,6 +12,11 @@ type Auth {
   user: User!
 }
 
+input BlockUserInput {
+  id: String!
+  name: String
+}
+
 input ChangePasswordInput {
   newPassword: String!
   oldPassword: String!
@@ -47,6 +52,7 @@ input LoginInput {
 }
 
 type Mutation {
+  blockUsers(data: BlockUserInput!): [String!]!
   changePassword(data: ChangePasswordInput!): User!
   createProfile(data: UpsertProfileInput!): Profile!
   createUser(data: SignupInput!): User!
@@ -102,6 +108,7 @@ input SignupInput {
   country: String
   email: String
   id: String!
+  name: String
   phone: String!
   tAndCConsent: Boolean
 }

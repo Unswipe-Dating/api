@@ -15,9 +15,10 @@ import { User } from './models/user.model';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { SignupInput } from 'src/auth/dto/signup.input';
+import { BlockUserInput } from './dto/block-user.input';
 
 @Resolver(() => User)
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 export class UsersResolver {
   constructor(
     private usersService: UsersService,
@@ -58,5 +59,23 @@ export class UsersResolver {
       user.password,
       changePassword,
     );
+  }
+
+  // @UseGuards(GqlAuthGuard)
+  @Mutation(() => [String])
+  async blockUsers(id: string, @Args('data') data: BlockUserInput) {
+    console.log('data', data);
+    const blockedUsers = [data]
+      .map(
+        async (user) =>
+          await this.usersService.createUserIfDoesntExist(user?.id, user),
+      )
+      .filter((u) => !(u === undefined && u === null))
+      .map((u: any) => u.id as string);
+
+    console.log('blocked', blockedUsers);
+
+    // await this.usersService.blockUsersForId(id, blockedUsers);
+    return blockedUsers;
   }
 }

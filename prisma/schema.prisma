@@ -24,40 +24,40 @@ enum DatingPreference {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  email        String?   @unique
-  phone        String    @unique
-  country      String
-  password     String
-  tAndCConsent Boolean
-  firstname    String?
-  lastname     String?
-  wallet       Wallet?
-  chats        Chat[]
-  prompts      Prompt[]
-  Request      Request[]
-  profileId    String?
-  Profile      Profile?
+  id                 String    @id @default(cuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  email              String?   @unique
+  phone              String    @unique
+  country            String
+  password           String
+  tAndCConsent       Boolean
+  firstname          String?
+  lastname           String?
+  blockedListUserIds String[]
+  wallet             Wallet?
+  chats              Chat[]
+  prompts            Prompt[]
+  Request            Request[]
+  profileId          String?
+  Profile            Profile?
 }
 
 model Profile {
-  id                 String            @id @default(cuid())
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  completed          Boolean?
-  name               String?
-  showTruncatedName  Boolean?
-  dob                String?
-  gender             DatingPreference?
-  pronouns           String?
-  blockedListUserIds String[]
-  photoURLs          String[]
-  datingPreference   DatingPreference?
-  interests          String?
-  user               User              @relation(fields: [userId], references: [id])
-  userId             String            @unique
+  id                String            @id @default(cuid())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  completed         Boolean?
+  name              String?
+  showTruncatedName Boolean?
+  dob               String?
+  gender            DatingPreference?
+  pronouns          String?
+  photoURLs         String[]
+  datingPreference  DatingPreference?
+  interests         String?
+  user              User              @relation(fields: [userId], references: [id])
+  userId            String            @unique
 }
 
 model Wallet {

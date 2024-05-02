@@ -5,6 +5,7 @@ import { ChangePasswordInput } from './dto/change-password.input';
 import { SignupInput } from 'src/auth/dto/signup.input';
 import { ConfigService } from '@nestjs/config';
 import { SecurityConfig } from 'src/common/configs/config.interface';
+import { User } from './models/user.model';
 
 @Injectable()
 export class UsersService {
@@ -28,20 +29,29 @@ export class UsersService {
     });
   }
 
-  async createUserIfDoesntExist(id: string) {
+  async createUserIfDoesntExist(id: string, userInput?: Partial<SignupInput>) {
     let user = await this.prisma.user.findFirst({ where: { id: id } });
     if (!user) {
       user = await this.updateUser(id, {
         id: id,
         phone: id,
-        email: '',
-        country: '',
-        tAndCConsent: false,
+        name: userInput?.name || '',
+        email: userInput?.email,
+        country: userInput?.country || '',
+        tAndCConsent: userInput?.tAndCConsent || false,
       });
     }
     return user;
   }
 
+  async blockUsersForId(id: string, users: string[]) {
+    return await this.prisma.user.update({
+      where: { id: id },
+      data: {
+        blockedListUserIds: users,
+      },
+    });
+  }
   async changePassword(
     userId: string,
     userPassword: string,

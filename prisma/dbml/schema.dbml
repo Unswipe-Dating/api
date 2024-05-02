@@ -13,6 +13,7 @@ Table User {
   tAndCConsent Boolean [not null]
   firstname String
   lastname String
+  blockedListUserIds String[] [not null]
   wallet Wallet
   chats Chat [not null]
   prompts Prompt [not null]
@@ -31,7 +32,6 @@ Table Profile {
   dob String
   gender DatingPreference
   pronouns String
-  blockedListUserIds String[] [not null]
   photoURLs String[] [not null]
   datingPreference DatingPreference
   interests String

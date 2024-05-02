@@ -21,4 +21,7 @@ export class SignupInput {
 
   @Field({ nullable: true })
   tAndCConsent: boolean;
+
+  @Field({ nullable: true })
+  name: string;
 }
