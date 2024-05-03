@@ -8,6 +8,9 @@ import { UpsertProfileInput } from './dto/upsertProfile.input';
 import { UploadProfilePhotosInput } from './dto/uploadPhoto.input';
 import { DatabaseService } from '../database/database.service';
 import { UploaderService } from 'src/uploader/uploader.service';
+import { UserIdPaginatedArgs } from './args/user-id-paginated.args';
+import { User } from 'src/users/models/user.model';
+import { UserEntity } from 'src/common/decorators/user.decorator';
 
 @Resolver(() => Profile)
 @UseGuards(GqlAuthGuard)
@@ -44,31 +47,40 @@ export class ProfilesResolver {
           name: data.name,
           pronouns: data.pronouns,
           showTruncatedName: data.showTruncatedName,
-          // FIXME: profile is not being connected to the user -> this is not working
-          // user: {
-          //   connect: {
-          //     id: data.userId,
-          //   },
-          // },
-        },
-        include: {
-          user: true,
         },
       });
+
+    await this.databaseService.extendedClient.user.update({
+      where: {
+        id: data.userId,
+      },
+      data: {
+        profileId: createdProfile.id,
+      },
+      include: {
+        Profile: true,
+      },
+    });
     return createdProfile;
   }
 
   @Mutation(() => String)
   @UseGuards(GqlAuthGuard)
-  async uploadProfilePhotos(@Args('data') data: UploadProfilePhotosInput) {
-    // TODO: Have photos be mapped to the profile & user.
+  async uploadProfilePhotos(
+    @UserEntity() user: User,
+    @Args('data') data: UploadProfilePhotosInput,
+  ) {
     const { files } = data;
-    console.log('uploading the following photos', data, files);
-    files.forEach(async (f) => {
-      const uploadResult = await this.uploaderService.uploadImage(1, f);
-      console.log('uploadResult', uploadResult);
-    });
-    if (files) {
+    const uploadedImages = await Promise.all(
+      files.map((f) => this.uploaderService.uploadImage(user.id, f)),
+    );
+    if (files && uploadedImages) {
+      await this.databaseService.extendedClient.profile.update({
+        where: { userId: user.id },
+        data: {
+          photoURLs: uploadedImages,
+        },
+      });
       return 'ok';
     }
   }
@@ -78,6 +90,26 @@ export class ProfilesResolver {
     return this.databaseService.extendedClient.profile.findUnique({
       where: { userId: id.userId },
     });
+  }
+
+  @Query(() => [Profile])
+  async browseProfiles(@Args('data') data: UserIdPaginatedArgs) {
+    const user = await this.databaseService.extendedClient.user.findFirst({
+      where: { id: data.userId },
+    });
+    // TODO: Allow a set of criteria to filter the profiles from.
+    const result = await this.databaseService.extendedClient.profile.findMany({
+      where: {
+        userId: {
+          not: {
+            in: [data.userId, ...user.blockedListUserIds],
+          },
+        },
+      },
+      skip: data.cursor,
+      take: data.page_size,
+    });
+    return result;
   }
 
   @Query(() => Profile)

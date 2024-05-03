@@ -43,4 +43,7 @@ export class Profile extends BaseModel {
 
   @Field(() => User, { nullable: true })
   user?: User;
+
+  @Field({ nullable: true })
+  photoURLs: string[];
 }

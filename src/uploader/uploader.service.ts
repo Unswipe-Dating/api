@@ -58,7 +58,7 @@ export class UploaderService {
    * Converts an image to jpeg and uploads it to the bucket
    */
   public async uploadImage(
-    userId: number,
+    userId: string,
     file: Promise<FileUploadType>,
     ratio?: RatioEnum,
   ): Promise<string> {
@@ -106,7 +106,7 @@ export class UploaderService {
   }
 
   private async uploadFile(
-    userId: number,
+    userId: string,
     fileBuffer: Buffer,
     fileExt: string,
   ): Promise<string> {
@@ -132,6 +132,12 @@ export class UploaderService {
       throw new InternalServerErrorException('Error uploading file');
     }
 
-    return this.bucketData.url + key;
+    return (
+      'https://s3.amazonaws.com/' +
+      this.bucketData.name +
+      '/' +
+      this.bucketData.url +
+      key
+    );
   }
 }

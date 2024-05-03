@@ -81,6 +81,7 @@ type Profile {
   id: String
   interests: JSONObject
   name: String
+  photoURLs: [String!]
   pronouns: String
   showTruncatedName: Boolean
 
@@ -91,6 +92,7 @@ type Profile {
 }
 
 type Query {
+  browseProfiles(data: UserIdPaginatedArgs!): [Profile!]!
   hello(name: String!): String!
   helloWorld: String!
   me: User!
@@ -157,4 +159,10 @@ type User {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
+}
+
+input UserIdPaginatedArgs {
+  cursor: Int
+  page_size: Int! = 10
+  userId: String!
 }
