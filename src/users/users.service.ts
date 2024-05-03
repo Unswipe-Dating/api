@@ -35,7 +35,6 @@ export class UsersService {
       user = await this.updateUser(id, {
         id: id,
         phone: id,
-        name: userInput?.name || '',
         email: userInput?.email,
         country: userInput?.country || '',
         tAndCConsent: userInput?.tAndCConsent || false,
@@ -45,6 +44,7 @@ export class UsersService {
   }
 
   async blockUsersForId(id: string, users: string[]) {
+    console.log('DEBUG', id, users);
     return await this.prisma.user.update({
       where: { id: id },
       data: {

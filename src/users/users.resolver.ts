@@ -61,21 +61,24 @@ export class UsersResolver {
     );
   }
 
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => [String])
-  async blockUsers(id: string, @Args('data') data: BlockUserInput) {
+  async blockUsers(@Args('id') id: string, @Args('data') data: BlockUserInput) {
     console.log('data', data);
-    const blockedUsers = [data]
-      .map(
-        async (user) =>
-          await this.usersService.createUserIfDoesntExist(user?.id, user),
+    const blockedUsers = (
+      await Promise.all(
+        data?.phones?.map(async (phone) =>
+          this.usersService.createUserIfDoesntExist(phone, {
+            phone: phone,
+            id: phone,
+          }),
+        ),
       )
+    )
       .filter((u) => !(u === undefined && u === null))
       .map((u: any) => u.id as string);
 
-    console.log('blocked', blockedUsers);
-
-    // await this.usersService.blockUsersForId(id, blockedUsers);
+    await this.usersService.blockUsersForId(id, blockedUsers);
     return blockedUsers;
   }
 }
