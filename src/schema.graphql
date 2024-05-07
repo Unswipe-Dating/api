@@ -102,6 +102,7 @@ type Profile {
 
 type Query {
   browseProfiles(data: UserIdPaginatedArgs!): [Profile!]!
+  getRequest(id: String!): Request!
   hello(name: String!): String!
   helloWorld: String!
   me: User!

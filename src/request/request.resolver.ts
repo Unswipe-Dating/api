@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { UserEntity } from 'src/common/decorators/user.decorator';
@@ -9,6 +9,7 @@ import { RequestStatus } from '@prisma/client';
 import { RequestInput } from './dto/createRequest.input';
 import { RejectRequestInput } from './dto/rejectRequest.input';
 import { UpdateRequestInput } from './dto/updateRequest.input';
+import { RequestIdArgs } from './args/request-id.args';
 
 @Resolver()
 @UseGuards(GqlAuthGuard)
@@ -37,5 +38,10 @@ export class RequestResolver {
   @Mutation(() => Request)
   async updateRequest(@Args('data') data: UpdateRequestInput) {
     return this.requestService.updateRequest({ ...data, id: data.id });
+  }
+
+  @Query(() => Request)
+  async getRequest(@Args() data: RequestIdArgs) {
+    return await this.requestService.getRequest(data.id);
   }
 }

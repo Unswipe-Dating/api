@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RequestInput } from './dto/createRequest.input';
 import { DatabaseService } from 'src/database/database.service';
+import { Request } from './models/request.model';
 
 @Injectable()
 export class RequestService {
@@ -42,5 +43,11 @@ export class RequestService {
     } else {
       throw new Error('Request between these profiles already exists.');
     }
+  }
+
+  async getRequest(requestId: string): Promise<Request> {
+    return await this.databaseService.extendedClient.request.findUnique({
+      where: { id: requestId },
+    });
   }
 }
