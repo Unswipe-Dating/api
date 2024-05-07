@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
-import { Request } from './models/request.model';
+import { RequestInput } from './dto/createRequest.input';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class RequestService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly databaseService: DatabaseService) {}
 
-  async updateRequest(userId: string, requestObj: Request) {
-    return this.prisma.request.update({
+  async updateRequest(requestObj: Partial<RequestInput>) {
+    return this.databaseService.extendedClient.request.update({
       data: requestObj,
       where: {
         id: requestObj.id,
@@ -15,20 +15,32 @@ export class RequestService {
     });
   }
 
-  async createRequest(userId: string, requestObj: Request) {
-    return this.prisma.request.create({
-      data: {
-        id: requestObj.id,
-        type: requestObj.type,
-        userId: userId,
-        requesterProfileId: requestObj.requesterProfileId,
-        requesteeProfileId: requestObj.requesteeProfileId,
-        expiry: requestObj.expiry,
-        status: requestObj.status,
-        challenge: requestObj.challenge,
-        challengeVerification: requestObj.challengeVerification,
-        challengeVerificationStatus: requestObj.challengeVerificationStatus,
-      },
-    });
+  async createRequest(userId: string, requestObj: RequestInput) {
+    const existingRequest =
+      await this.databaseService.extendedClient.request.findFirst({
+        where: {
+          requesterProfileId: requestObj.requesterProfileId,
+          requesteeProfileId: requestObj.requesteeProfileId,
+        },
+      });
+
+    if (!existingRequest) {
+      return this.databaseService.extendedClient.request.create({
+        data: {
+          id: requestObj.id,
+          type: requestObj.type,
+          userId: userId,
+          requesterProfileId: requestObj.requesterProfileId,
+          requesteeProfileId: requestObj.requesteeProfileId,
+          expiry: requestObj.expiry,
+          status: requestObj.status,
+          challenge: requestObj.challenge,
+          challengeVerification: requestObj.challengeVerification,
+          challengeVerificationStatus: requestObj.challengeVerificationStatus,
+        },
+      });
+    } else {
+      throw new Error('Request between these profiles already exists.');
+    }
   }
 }

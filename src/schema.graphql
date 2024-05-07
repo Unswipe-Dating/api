@@ -60,15 +60,15 @@ type Mutation {
   blockUsers(data: BlockUserInput!, id: String!): [String!]!
   changePassword(data: ChangePasswordInput!): User!
   createProfile(data: UpsertProfileInput!): Profile!
-  createRequest(data: data!): Request!
+  createRequest(data: RequestInput!): Request!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
   refreshToken(data: RefreshTokenInput!): Token!
-  rejectRequest(data: data!): Request!
+  rejectRequest(data: RejectRequestInput!): Request!
   requestOTP(data: LoginInput!): Otp!
   signup(data: SignupInput!): Auth!
   updateProfile(data: UpsertProfileInput!): Profile!
-  updateRequest(data: data!): Request!
+  updateRequest(data: UpdateRequestInput!): Request!
   updateUser(data: SignupInput!): User!
   uploadProfilePhotos(data: UploadProfilePhotosInput!): String!
   validateOTP(data: LoginInput!): Token
@@ -114,8 +114,12 @@ input RefreshTokenInput {
   userId: String
 }
 
+input RejectRequestInput {
+  id: String!
+}
+
 type Request {
-  challenge: String
+  challenge: JSONObject
   challengeVerification: String
   challengeVerificationStatus: ChallengeVerificationStatus!
 
@@ -130,7 +134,17 @@ type Request {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
-  userId: String!
+}
+
+input RequestInput {
+  challenge: JSONObject
+  challengeVerification: String
+  challengeVerificationStatus: ChallengeVerificationStatus
+  expiry: String!
+  requesteeProfileId: String
+  requesterProfileId: String
+  status: RequestStatus!
+  type: RequestType!
 }
 
 """Defines the status of the request"""
@@ -163,6 +177,18 @@ type Token {
 
   """JWT refresh token"""
   refreshToken: JWT
+}
+
+input UpdateRequestInput {
+  challenge: JSONObject
+  challengeVerification: String
+  challengeVerificationStatus: ChallengeVerificationStatus
+  expiry: String!
+  id: String!
+  requesteeProfileId: String
+  requesterProfileId: String
+  status: RequestStatus!
+  type: RequestType!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -207,17 +233,5 @@ type User {
 input UserIdPaginatedArgs {
   cursor: Int
   page_size: Int! = 10
-  userId: String!
-}
-
-input data {
-  challenge: String
-  challengeVerification: String
-  challengeVerificationStatus: ChallengeVerificationStatus!
-  expiry: DateTime!
-  requesteeProfileId: String
-  requesterProfileId: String
-  status: RequestStatus!
-  type: RequestType!
   userId: String!
 }

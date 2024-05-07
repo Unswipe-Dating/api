@@ -1,4 +1,4 @@
-import { ObjectType, registerEnumType, Field } from '@nestjs/graphql';
+import { registerEnumType, Field, InputType } from '@nestjs/graphql';
 import { IsDateString } from 'class-validator';
 import { BaseModel } from '../../common/models/base.model';
 import {
@@ -24,8 +24,11 @@ registerEnumType(ChallengeVerificationStatus, {
     'Defines the verification status of a challenge within a request',
 });
 
-@ObjectType()
-export class Request extends BaseModel {
+@InputType()
+export class UpdateRequestInput extends BaseModel {
+  @Field(() => String)
+  id: string;
+
   @Field(() => RequestType)
   type: RequestType;
 
@@ -36,18 +39,17 @@ export class Request extends BaseModel {
   requesteeProfileId?: string;
 
   @Field()
-  @IsDateString()
-  expiry: Date;
+  expiry: string;
 
   @Field(() => RequestStatus)
   status: RequestStatus;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  challenge?: Record<string, any>; // JSON stringified challenge
+  challenge?: string; // JSON stringified challenge
 
   @Field(() => String, { nullable: true })
-  challengeVerification?: Record<string, any>; // JSON stringified challenge verification
+  challengeVerification?: string; // JSON stringified challenge verification
 
   @Field(() => ChallengeVerificationStatus)
-  challengeVerificationStatus: ChallengeVerificationStatus;
+  challengeVerificationStatus?: ChallengeVerificationStatus;
 }

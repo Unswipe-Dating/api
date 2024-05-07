@@ -108,7 +108,7 @@ model Request {
   requesteeProfileId          String
   expiry                      DateTime
   status                      RequestStatus
-  challenge                   Json? // challenge: { "weeklyDates": 3, "betAmountUSD": 10}
-  challengeVerification       Json? // challengeVerification: { "requesterLocation": [10.31,30.45], "requesterLocation": [10.31, 45.32]}
-  challengeVerificationStatus ChallengeVerificationStatus
+  challenge                   String? // challenge: { "weeklyDates": 3, "betAmountUSD": 10}
+  challengeVerification       String? // challengeVerification: { "requesterLocation": [10.31,30.45], "requesterLocation": [10.31, 45.32]}
+  challengeVerificationStatus ChallengeVerificationStatus @default(NOT_VERIFIED)
 }

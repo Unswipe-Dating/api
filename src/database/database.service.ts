@@ -14,6 +14,20 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
           },
         },
       },
+      request: {
+        challenge: {
+          needs: { challenge: true },
+          compute(request) {
+            return JSON.parse(request.challenge);
+          },
+        },
+        challengeVerification: {
+          needs: { challengeVerification: true },
+          compute(request) {
+            return JSON.parse(request.challengeVerification);
+          },
+        },
+      },
     },
     query: {
       profile: {
@@ -32,6 +46,42 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
             args.data = {
               ...args.data,
               interests: JSON.stringify(args.data.interests),
+            };
+          }
+          return query(args);
+        },
+      },
+      request: {
+        async create({ args, query }) {
+          if (args.data?.challenge) {
+            args.data = {
+              ...args.data,
+              challenge: JSON.stringify(args.data.challenge),
+            };
+          }
+          if (args.data?.challengeVerification) {
+            args.data = {
+              ...args.data,
+              challengeVerification: JSON.stringify(
+                args.data.challengeVerification,
+              ),
+            };
+          }
+          return query(args);
+        },
+        async update({ args, query }) {
+          if (args.data?.challenge) {
+            args.data = {
+              ...args.data,
+              challenge: JSON.stringify(args.data.challenge),
+            };
+          }
+          if (args.data?.challengeVerification) {
+            args.data = {
+              ...args.data,
+              challengeVerification: JSON.stringify(
+                args.data.challengeVerification,
+              ),
             };
           }
           return query(args);

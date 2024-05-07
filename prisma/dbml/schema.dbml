@@ -74,9 +74,9 @@ Table Request {
   requesteeProfileId String [not null]
   expiry DateTime [not null]
   status RequestStatus [not null]
-  challenge Json
-  challengeVerification Json
-  challengeVerificationStatus ChallengeVerificationStatus [not null]
+  challenge String
+  challengeVerification String
+  challengeVerificationStatus ChallengeVerificationStatus [not null, default: 'NOT_VERIFIED']
 }
 
 Enum RequestType {
