@@ -8,12 +8,6 @@ import {
 import { IsEmail, IsPhoneNumber } from 'class-validator';
 import { Profile } from '../../profiles/models/profile.model';
 import { BaseModel } from '../../common/models/base.model';
-import { RequestType } from '@prisma/client';
-
-registerEnumType(RequestType, {
-  name: 'RequestType',
-  description: 'Request role',
-});
 
 @ObjectType()
 export class User extends BaseModel {

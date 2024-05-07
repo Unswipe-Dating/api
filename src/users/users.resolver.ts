@@ -18,7 +18,7 @@ import { SignupInput } from 'src/auth/dto/signup.input';
 import { BlockUserInput } from './dto/block-user.input';
 
 @Resolver(() => User)
-// @UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard)
 export class UsersResolver {
   constructor(
     private usersService: UsersService,

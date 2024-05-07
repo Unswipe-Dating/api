@@ -13,6 +13,7 @@ import config from './common/configs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 import { S3Options } from './uploader/interfaces';
+import { RequestModule } from './request/request.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { S3Options } from './uploader/interfaces';
         url: '',
       },
     }),
+    RequestModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

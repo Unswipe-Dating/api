@@ -70,11 +70,31 @@ Table Request {
   updatedAt DateTime [not null]
   user User [not null]
   userId String [unique, not null]
+  requesterProfileId String [not null]
+  requesteeProfileId String [not null]
+  expiry DateTime [not null]
+  status RequestStatus [not null]
+  challenge Json
+  challengeVerification Json
+  challengeVerificationStatus ChallengeVerificationStatus [not null]
 }
 
 Enum RequestType {
   EXCLUSIVE
   HYPER_EXCLUSIVE
+}
+
+Enum RequestStatus {
+  ACTIVE
+  EXPIRED
+  REJECTED
+  MATCHED
+  BUSY
+}
+
+Enum ChallengeVerificationStatus {
+  VERIFIED
+  NOT_VERIFIED
 }
 
 Enum DatingPreference {

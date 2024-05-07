@@ -16,6 +16,12 @@ input BlockUserInput {
   phones: [String!]!
 }
 
+"""Defines the verification status of a challenge within a request"""
+enum ChallengeVerificationStatus {
+  NOT_VERIFIED
+  VERIFIED
+}
+
 input ChangePasswordInput {
   newPassword: String!
   oldPassword: String!
@@ -54,12 +60,15 @@ type Mutation {
   blockUsers(data: BlockUserInput!, id: String!): [String!]!
   changePassword(data: ChangePasswordInput!): User!
   createProfile(data: UpsertProfileInput!): Profile!
+  createRequest(data: data!): Request!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
   refreshToken(data: RefreshTokenInput!): Token!
+  rejectRequest(data: data!): Request!
   requestOTP(data: LoginInput!): Otp!
   signup(data: SignupInput!): Auth!
   updateProfile(data: UpsertProfileInput!): Profile!
+  updateRequest(data: data!): Request!
   updateUser(data: SignupInput!): User!
   uploadProfilePhotos(data: UploadProfilePhotosInput!): String!
   validateOTP(data: LoginInput!): Token
@@ -103,6 +112,40 @@ type Query {
 input RefreshTokenInput {
   token: JWT!
   userId: String
+}
+
+type Request {
+  challenge: String
+  challengeVerification: String
+  challengeVerificationStatus: ChallengeVerificationStatus!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  expiry: DateTime!
+  id: ID!
+  requesteeProfileId: String
+  requesterProfileId: String
+  status: RequestStatus!
+  type: RequestType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userId: String!
+}
+
+"""Defines the status of the request"""
+enum RequestStatus {
+  ACTIVE
+  BUSY
+  EXPIRED
+  MATCHED
+  REJECTED
+}
+
+"""Defines the type of request"""
+enum RequestType {
+  EXCLUSIVE
+  HYPER_EXCLUSIVE
 }
 
 input SignupInput {
@@ -164,5 +207,17 @@ type User {
 input UserIdPaginatedArgs {
   cursor: Int
   page_size: Int! = 10
+  userId: String!
+}
+
+input data {
+  challenge: String
+  challengeVerification: String
+  challengeVerificationStatus: ChallengeVerificationStatus!
+  expiry: DateTime!
+  requesteeProfileId: String
+  requesterProfileId: String
+  status: RequestStatus!
+  type: RequestType!
   userId: String!
 }
