@@ -10,6 +10,7 @@ import { RequestInput } from './dto/createRequest.input';
 import { RejectRequestInput } from './dto/rejectRequest.input';
 import { UpdateRequestInput } from './dto/updateRequest.input';
 import { RequestIdArgs } from './args/request-id.args';
+import { MatchRequestInput } from './dto/matchRequest.input';
 
 @Resolver()
 @UseGuards(GqlAuthGuard)
@@ -31,6 +32,15 @@ export class RequestResolver {
     return this.requestService.updateRequest({
       id: data.id,
       status: RequestStatus.REJECTED,
+    });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Request)
+  async matchRequest(@Args('data') data: MatchRequestInput) {
+    return this.requestService.updateRequest({
+      id: data.id,
+      status: RequestStatus.MATCHED,
     });
   }
 

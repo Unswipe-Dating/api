@@ -56,6 +56,10 @@ input LoginInput {
   phone: String!
 }
 
+input MatchRequestInput {
+  id: String!
+}
+
 type Mutation {
   blockUsers(data: BlockUserInput!, id: String!): [String!]!
   changePassword(data: ChangePasswordInput!): User!
@@ -63,6 +67,7 @@ type Mutation {
   createRequest(data: RequestInput!): Request!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
+  matchRequest(data: MatchRequestInput!): Request!
   refreshToken(data: RefreshTokenInput!): Token!
   rejectRequest(data: RejectRequestInput!): Request!
   requestOTP(data: LoginInput!): Otp!
