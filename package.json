@@ -1,8 +1,8 @@
 {
-  "name": "nestjs-prisma-client-starter",
+  "name": "@unswipe/backend",
   "version": "0.0.1",
-  "description": "NestJS Prisma Client Starter Project",
-  "author": "Marc Stammerjohann",
+  "description": "Unswipe backend API",
+  "author": "Jatin Sandilya",
   "license": "MIT",
   "keywords": [
     "nestjs",

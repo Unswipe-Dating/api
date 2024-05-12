@@ -92,8 +92,13 @@ type Profile {
   datingPreference: DatingPreference
   dob: String
   gender: DatingPreference
+  height: String
+  hometown: String
   id: String
   interests: JSONObject
+  languages: [String!]
+  location: String
+  locationCoordinates: [String!]
   name: String
   photoURLs: [String!]
   pronouns: String
@@ -103,6 +108,7 @@ type Profile {
   updatedAt: DateTime!
   user: User
   userId: String!
+  zodiac: ZodiacSign
 }
 
 type Query {
@@ -211,13 +217,19 @@ input UpsertProfileInput {
   datingPreference: DatingPreference
   dob: String
   gender: DatingPreference
+  height: String
+  hometown: String
   id: String
   interests: JSONObject
+  languages: [String!]
+  location: String
+  locationCoordinates: [String!]
   name: String
   pronouns: String
   showTruncatedName: Boolean
   updatedAt: String
   userId: String!
+  zodiac: ZodiacSign
 }
 
 type User {
@@ -240,4 +252,20 @@ input UserIdPaginatedArgs {
   cursor: Int
   page_size: Int! = 10
   userId: String!
+}
+
+"""ZodiacSign enum"""
+enum ZodiacSign {
+  Aquarius
+  Aries
+  Cancer
+  Capricorn
+  Gemini
+  Leo
+  Libra
+  Pisces
+  Sagittarius
+  Scorpio
+  Taurus
+  Virgo
 }

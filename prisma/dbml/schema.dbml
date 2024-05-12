@@ -32,6 +32,12 @@ Table Profile {
   dob String
   gender DatingPreference
   pronouns String
+  hometown String
+  height String
+  location String
+  locationCoordinates String[] [not null]
+  zodiac ZodiacSign
+  languages String[] [not null]
   photoURLs String[] [not null]
   datingPreference DatingPreference
   interests String
@@ -90,6 +96,21 @@ Enum RequestStatus {
   REJECTED
   MATCHED
   BUSY
+}
+
+Enum ZodiacSign {
+  Aries
+  Taurus
+  Gemini
+  Cancer
+  Leo
+  Virgo
+  Libra
+  Scorpio
+  Sagittarius
+  Capricorn
+  Aquarius
+  Pisces
 }
 
 Enum ChallengeVerificationStatus {

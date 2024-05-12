@@ -1,7 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { BaseModel } from '../../common/models/base.model';
 import { IsNotEmpty } from 'class-validator';
-import { DatingPreference } from '@prisma/client';
+import { DatingPreference, ZodiacSign } from '@prisma/client';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { User } from 'src/users/models/user.model';
 
@@ -46,4 +46,22 @@ export class Profile extends BaseModel {
 
   @Field({ nullable: true })
   photoURLs: string[];
+
+  @Field({ nullable: true })
+  hometown?: string;
+
+  @Field({ nullable: true })
+  height?: string; // x'y" in ft'inches" format
+
+  @Field({ nullable: true })
+  location?: string;
+
+  @Field(() => [String], { nullable: true })
+  locationCoordinates?: string[];
+
+  @Field(() => [String], { nullable: true })
+  languages?: string[];
+
+  @Field(() => ZodiacSign, { nullable: true })
+  zodiac?: ZodiacSign;
 }

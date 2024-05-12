@@ -47,6 +47,12 @@ export class ProfilesResolver {
           name: data.name,
           pronouns: data.pronouns,
           showTruncatedName: data.showTruncatedName,
+          hometown: data.hometown,
+          height: data.height,
+          location: data.location,
+          locationCoordinates: data.locationCoordinates,
+          zodiac: data.zodiac,
+          languages: data.languages,
         },
       });
 

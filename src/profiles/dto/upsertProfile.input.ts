@@ -4,13 +4,18 @@ import {
   registerEnumType,
   ObjectType,
 } from '@nestjs/graphql';
-import { DatingPreference } from '@prisma/client';
+import { DatingPreference, ZodiacSign } from '@prisma/client';
 import { IsNotEmpty } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 
 registerEnumType(DatingPreference, {
   name: 'DatingPreference',
   description: 'Dating Preference enum',
+});
+
+registerEnumType(ZodiacSign, {
+  name: 'ZodiacSign',
+  description: 'ZodiacSign enum',
 });
 
 @InputType()
@@ -55,4 +60,22 @@ export class UpsertProfileInput {
 
   @Field(() => GraphQLJSONObject, { nullable: true })
   interests: string;
+
+  @Field({ nullable: true })
+  hometown?: string;
+
+  @Field({ nullable: true })
+  height?: string; // x'y" in ft'inches" format
+
+  @Field({ nullable: true })
+  location?: string;
+
+  @Field(() => [String], { nullable: true })
+  locationCoordinates?: string[];
+
+  @Field(() => [String], { nullable: true })
+  languages?: string[];
+
+  @Field(() => ZodiacSign, { nullable: true })
+  zodiac?: ZodiacSign;
 }
