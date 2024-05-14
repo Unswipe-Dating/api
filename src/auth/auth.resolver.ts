@@ -4,6 +4,7 @@ import {
   Args,
   Parent,
   ResolveField,
+  Query,
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
@@ -17,6 +18,7 @@ import { OTPLessConfig } from 'src/common/configs/config.interface';
 import { ConfigService } from '@nestjs/config';
 import { Otp } from './models/otp.model';
 import * as otpless from 'otpless-node-js-auth-sdk';
+import GraphQLJSON from 'graphql-type-json';
 
 const otpLength = 6;
 
@@ -27,6 +29,14 @@ export class AuthResolver {
     private readonly userService: UsersService,
     private readonly configService: ConfigService,
   ) {}
+
+  @Query(() => GraphQLJSON)
+  async getConfig() {
+    return {
+      firebase: this.configService.get('firebase'),
+      reclaim: this.configService.get('reclaim'),
+    };
+  }
 
   @Mutation(() => Auth)
   async signup(@Args('data') data: SignupInput) {

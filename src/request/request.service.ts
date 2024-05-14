@@ -14,6 +14,8 @@ export class RequestService {
         id: requestObj.id,
       },
     });
+
+    // TODO: Add reject userIds to rejectedList of a user (similar to blockedUsers)
   }
 
   async createRequest(userId: string, requestObj: RequestInput) {

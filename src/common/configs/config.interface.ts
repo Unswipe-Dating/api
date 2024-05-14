@@ -9,6 +9,8 @@ export interface Config {
   otpless: OTPLessConfig;
   fileUpload: FileUploadConfig;
   s3Config: S3Options;
+  firebase: { [key: string]: string };
+  reclaim: { [key: string]: string };
 }
 
 export interface FileUploadConfig {

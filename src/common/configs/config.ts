@@ -27,8 +27,8 @@ const config: Config = {
     defaultPassword: '73b4894b-edb4-4c08-8a4e-084896cb8695',
   },
   otpless: {
-    clientId: '6B06C2ZKHM8R6D2SRG434K1RITXBJ37F',
-    clientSecret: '14ot4tu6xecx8ojazk29arh2i0opc3lq',
+    clientId: process.env.OTPLESS_CLIENT_ID,
+    clientSecret: process.env.OTPLESS_CLIENT_SECRET,
   },
   fileUpload: { maxFileSize: 10000000, maxFiles: 10 },
   s3Config: {
@@ -45,6 +45,13 @@ const config: Config = {
       appUuid: process.env.S3_APP_UUID,
       url: '',
     },
+  },
+  firebase: {
+    fcmToken: process.env.FIREBASE_FCM_TOKEN,
+  },
+  reclaim: {
+    appId: process.env.RECLAIM_APP_ID,
+    appSecret: process.env.RECLAIM_APP_SECRET,
   },
 };
 
