@@ -103,18 +103,55 @@ export class ProfilesResolver {
     const user = await this.databaseService.extendedClient.user.findFirst({
       where: { id: data.userId },
     });
-    // TODO: Allow a set of criteria to filter the profiles from.
-    const result = await this.databaseService.extendedClient.profile.findMany({
-      where: {
-        userId: {
-          not: {
-            in: [data.userId, ...user.blockedListUserIds],
+    const currentUserProfile =
+      await this.databaseService.extendedClient.profile.findUnique({
+        where: { userId: data.userId },
+      });
+
+    const profiles = await this.databaseService.extendedClient.profile.findMany(
+      {
+        where: {
+          userId: {
+            not: {
+              in: [data.userId, ...user.blockedListUserIds],
+            },
           },
         },
       },
-      skip: data.cursor,
-      take: data.page_size,
+    );
+
+    const sortedProfiles = profiles.sort((a, b) => {
+      const distanceA = Math.sqrt(
+        Math.pow(
+          Number(a.locationCoordinates[0]) -
+            Number(currentUserProfile.locationCoordinates[0]),
+          2,
+        ) +
+          Math.pow(
+            Number(a.locationCoordinates[1]) -
+              Number(currentUserProfile.locationCoordinates[1]),
+            2,
+          ),
+      );
+      const distanceB = Math.sqrt(
+        Math.pow(
+          Number(b.locationCoordinates[0]) -
+            Number(currentUserProfile.locationCoordinates[0]),
+          2,
+        ) +
+          Math.pow(
+            Number(b.locationCoordinates[1]) -
+              Number(currentUserProfile.locationCoordinates[1]),
+            2,
+          ),
+      );
+      return distanceA - distanceB;
     });
+
+    const result = sortedProfiles.slice(
+      data.cursor,
+      data.cursor + data.page_size,
+    );
     return result;
   }
 
