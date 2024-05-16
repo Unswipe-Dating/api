@@ -27,6 +27,8 @@ export class RequestService {
         },
       });
 
+    // TODO: Handle the case where requestee is already exclusive with someone else
+    // TODO: Think & work around edge cases here. 
     if (!existingRequest) {
       return this.databaseService.extendedClient.request.create({
         data: {

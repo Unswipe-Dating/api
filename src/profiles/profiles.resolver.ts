@@ -11,9 +11,12 @@ import { UploaderService } from 'src/uploader/uploader.service';
 import { UserIdPaginatedArgs } from './args/user-id-paginated.args';
 import { User } from 'src/users/models/user.model';
 import { UserEntity } from 'src/common/decorators/user.decorator';
+import { PaginatedProfile } from './models/paginated-profile.model';
+import { sortProfilesByDistance } from 'src/common/helpers/algorithm/sortProfilesByDistance';
+
 
 @Resolver(() => Profile)
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 export class ProfilesResolver {
   constructor(
     private readonly databaseService: DatabaseService,
@@ -33,7 +36,7 @@ export class ProfilesResolver {
   }
 
   @Mutation(() => Profile)
-  @UseGuards(GqlAuthGuard)
+  // @UseGuards(GqlAuthGuard)
   async createProfile(@Args('data') data: UpsertProfileInput) {
     const createdProfile =
       await this.databaseService.extendedClient.profile.create({
@@ -98,7 +101,7 @@ export class ProfilesResolver {
     });
   }
 
-  @Query(() => [Profile])
+  @Query(() => PaginatedProfile)
   async browseProfiles(@Args('data') data: UserIdPaginatedArgs) {
     const user = await this.databaseService.extendedClient.user.findFirst({
       where: { id: data.userId },
@@ -107,7 +110,6 @@ export class ProfilesResolver {
       await this.databaseService.extendedClient.profile.findUnique({
         where: { userId: data.userId },
       });
-
     const profiles = await this.databaseService.extendedClient.profile.findMany(
       {
         where: {
@@ -116,43 +118,18 @@ export class ProfilesResolver {
               in: [data.userId, ...user.blockedListUserIds],
             },
           },
+          gender: currentUserProfile.datingPreference,
         },
       },
     );
 
-    const sortedProfiles = profiles.sort((a, b) => {
-      const distanceA = Math.sqrt(
-        Math.pow(
-          Number(a.locationCoordinates[0]) -
-            Number(currentUserProfile.locationCoordinates[0]),
-          2,
-        ) +
-          Math.pow(
-            Number(a.locationCoordinates[1]) -
-              Number(currentUserProfile.locationCoordinates[1]),
-            2,
-          ),
-      );
-      const distanceB = Math.sqrt(
-        Math.pow(
-          Number(b.locationCoordinates[0]) -
-            Number(currentUserProfile.locationCoordinates[0]),
-          2,
-        ) +
-          Math.pow(
-            Number(b.locationCoordinates[1]) -
-              Number(currentUserProfile.locationCoordinates[1]),
-            2,
-          ),
-      );
-      return distanceA - distanceB;
-    });
+    const sortedProfiles = sortProfilesByDistance(currentUserProfile, profiles);
+    const endIndex = data.cursor + data.page_size;
+    const result = sortedProfiles.slice(data.cursor, endIndex);
+    const hasNext = endIndex < sortedProfiles.length;
+    const nextCursor = hasNext ? endIndex : null;
 
-    const result = sortedProfiles.slice(
-      data.cursor,
-      data.cursor + data.page_size,
-    );
-    return result;
+    return { profiles: result, hasNext, nextCursor };
   }
 
   @Query(() => Profile)

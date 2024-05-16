@@ -88,6 +88,12 @@ type Otp {
   orderId: String!
 }
 
+type PaginatedProfile {
+  hasNext: Boolean
+  nextCursor: Int
+  profiles: [Profile!]
+}
+
 type Profile {
   blockedListUserIds: [String!]
   completed: Boolean
@@ -117,7 +123,7 @@ type Profile {
 }
 
 type Query {
-  browseProfiles(data: UserIdPaginatedArgs!): [Profile!]!
+  browseProfiles(data: UserIdPaginatedArgs!): PaginatedProfile!
   getConfig: JSON!
   getRequest(id: String!): Request!
   hello(name: String!): String!
@@ -255,7 +261,7 @@ type User {
 }
 
 input UserIdPaginatedArgs {
-  cursor: Int
+  cursor: Int = 0
   page_size: Int! = 10
   userId: String!
 }

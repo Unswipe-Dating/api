@@ -12,6 +12,6 @@ export class UserIdPaginatedArgs {
   @Field(() => Number, { defaultValue: 10 })
   page_size: number;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Number, { nullable: true, defaultValue: 0 })
   cursor: number;
 }
