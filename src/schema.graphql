@@ -95,7 +95,6 @@ type PaginatedProfile {
 }
 
 type Profile {
-  blockedListUserIds: [String!]
   completed: Boolean
 
   """Identifies the date and time when the object was created."""
@@ -245,6 +244,7 @@ input UpsertProfileInput {
 }
 
 type User {
+  Profile: Profile
   country: String!
 
   """Identifies the date and time when the object was created."""
@@ -253,7 +253,7 @@ type User {
   id: String!
   lastname: String
   phone: String!
-  profile: Profile
+  profileId: String
   tAndCConsent: Boolean!
 
   """Identifies the date and time when the object was last updated."""

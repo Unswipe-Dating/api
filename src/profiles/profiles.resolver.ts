@@ -16,7 +16,7 @@ import { sortProfilesByDistance } from 'src/common/helpers/algorithm/sortProfile
 
 
 @Resolver(() => Profile)
-// @UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard)
 export class ProfilesResolver {
   constructor(
     private readonly databaseService: DatabaseService,
@@ -36,7 +36,7 @@ export class ProfilesResolver {
   }
 
   @Mutation(() => Profile)
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async createProfile(@Args('data') data: UpsertProfileInput) {
     const createdProfile =
       await this.databaseService.extendedClient.profile.create({

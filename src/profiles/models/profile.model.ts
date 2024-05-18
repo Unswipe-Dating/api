@@ -32,14 +32,11 @@ export class Profile extends BaseModel {
   @Field({ nullable: true })
   pronouns: string;
 
-  @Field({ nullable: true })
-  blockedListUserIds: string[];
-
   @Field(() => DatingPreference, { nullable: true })
   datingPreference: DatingPreference;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  interests: Record<string, any>;
+  interests: string;
 
   @Field(() => User, { nullable: true })
   user?: User;

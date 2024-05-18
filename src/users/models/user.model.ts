@@ -26,7 +26,10 @@ export class User extends BaseModel {
   lastname?: string;
 
   @Field(() => Profile, { nullable: true })
-  profile?: Profile | null;
+  Profile: Profile;
+
+  @Field({ nullable: true })
+  profileId: string;
 
   @HideField()
   password: string;
