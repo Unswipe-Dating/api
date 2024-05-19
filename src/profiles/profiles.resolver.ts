@@ -40,7 +40,7 @@ export class ProfilesResolver {
     const createdProfile =
       await this.databaseService.extendedClient.profile.upsert({
         where: {
-          id: data.id,
+          userId: data.userId,
         },
         update: {
           userId: data.userId,
