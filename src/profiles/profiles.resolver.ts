@@ -78,6 +78,7 @@ export class ProfilesResolver {
         },
       });
 
+    console.log('createdProfile', createdProfile, data);
     await this.databaseService.extendedClient.user.update({
       where: {
         id: data.userId,
@@ -114,6 +115,7 @@ export class ProfilesResolver {
             photoURLs: uploadedImages,
           },
         });
+      console.log('createdProfile (upload)', createdProfile, data);
       await this.databaseService.extendedClient.user.update({
         where: {
           id: user.id,
