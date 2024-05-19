@@ -38,8 +38,28 @@ export class ProfilesResolver {
   @UseGuards(GqlAuthGuard)
   async createProfile(@Args('data') data: UpsertProfileInput) {
     const createdProfile =
-      await this.databaseService.extendedClient.profile.create({
-        data: {
+      await this.databaseService.extendedClient.profile.upsert({
+        where: {
+          id: data.id,
+        },
+        update: {
+          userId: data.userId,
+          completed: data.completed,
+          datingPreference: data.datingPreference,
+          dob: data.dob,
+          gender: data.gender,
+          interests: data.interests,
+          name: data.name,
+          pronouns: data.pronouns,
+          showTruncatedName: data.showTruncatedName,
+          hometown: data.hometown,
+          height: data.height,
+          location: data.location,
+          locationCoordinates: data.locationCoordinates,
+          zodiac: data.zodiac,
+          languages: data.languages,
+        },
+        create: {
           userId: data.userId,
           completed: data.completed,
           datingPreference: data.datingPreference,
