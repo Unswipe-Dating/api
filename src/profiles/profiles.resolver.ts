@@ -14,7 +14,6 @@ import { UserEntity } from 'src/common/decorators/user.decorator';
 import { PaginatedProfile } from './models/paginated-profile.model';
 import { sortProfilesByDistance } from 'src/common/helpers/algorithm/sortProfilesByDistance';
 
-
 @Resolver(() => Profile)
 @UseGuards(GqlAuthGuard)
 export class ProfilesResolver {
@@ -84,10 +83,26 @@ export class ProfilesResolver {
       files.map((f) => this.uploaderService.uploadImage(user.id, f)),
     );
     if (files && uploadedImages) {
-      await this.databaseService.extendedClient.profile.update({
-        where: { userId: user.id },
+      const createdProfile =
+        await this.databaseService.extendedClient.profile.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            photoURLs: uploadedImages,
+          },
+          update: {
+            photoURLs: uploadedImages,
+          },
+        });
+      await this.databaseService.extendedClient.user.update({
+        where: {
+          id: user.id,
+        },
         data: {
-          photoURLs: uploadedImages,
+          profileId: createdProfile.id,
+        },
+        include: {
+          Profile: true,
         },
       });
       return 'ok';
