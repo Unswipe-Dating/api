@@ -50,6 +50,21 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
           }
           return query(args);
         },
+        async upsert({ args, query }) {
+          if (args.create?.interests) {
+            args.create = {
+              ...args.create,
+              interests: JSON.stringify(args.create.interests),
+            };
+          }
+          if (args.update?.interests) {
+            args.update = {
+              ...args.update,
+              interests: JSON.stringify(args.update.interests),
+            };
+          }
+          return query(args);
+        },
       },
       request: {
         async create({ args, query }) {
