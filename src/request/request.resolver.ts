@@ -11,9 +11,12 @@ import { RejectRequestInput } from './dto/rejectRequest.input';
 import { UpdateRequestInput } from './dto/updateRequest.input';
 import { RequestIdArgs } from './args/request-id.args';
 import { MatchRequestInput } from './dto/matchRequest.input';
+import { PaginatedRequest } from './models/paginated-request.model';
+import { UserIdPaginatedArgs } from 'src/profiles/args/user-id-paginated.args';
+import { Profile } from 'src/profiles/models/profile.model';
 
 @Resolver()
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 export class RequestResolver {
   constructor(private requestService: RequestService) {}
 
@@ -53,5 +56,9 @@ export class RequestResolver {
   @Query(() => Request)
   async getRequest(@Args() data: RequestIdArgs) {
     return await this.requestService.getRequest(data.id);
+  }
+  @Query(() => [Profile])
+  async getRequestedProfilesForUser(@Args('data') data: UserIdPaginatedArgs) {
+    return await this.requestService.getRequestsByUser(data);
   }
 }

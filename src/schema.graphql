@@ -125,6 +125,7 @@ type Query {
   browseProfiles(data: UserIdPaginatedArgs!): PaginatedProfile!
   getConfig: JSON!
   getRequest(id: String!): Request!
+  getRequestedProfilesForUser(data: UserIdPaginatedArgs!): [Profile!]!
   hello(name: String!): String!
   helloWorld: String!
   me: User!

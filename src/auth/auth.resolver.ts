@@ -19,6 +19,10 @@ import { ConfigService } from '@nestjs/config';
 import { Otp } from './models/otp.model';
 import * as otpless from 'otpless-node-js-auth-sdk';
 import GraphQLJSON from 'graphql-type-json';
+import { GqlAuthGuard } from './gql-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { UserEntity } from 'src/common/decorators/user.decorator';
+import { DatabaseService } from 'src/database/database.service';
 
 const otpLength = 6;
 
@@ -28,13 +32,36 @@ export class AuthResolver {
     private readonly auth: AuthService,
     private readonly userService: UsersService,
     private readonly configService: ConfigService,
+    private readonly databaseService: DatabaseService,
   ) {}
 
   @Query(() => GraphQLJSON)
-  async getConfig() {
+  @UseGuards(GqlAuthGuard)
+  async getConfig(@UserEntity() user: User) {
+    const currentUserProfile =
+      await this.databaseService.extendedClient.profile.findUnique({
+        where: { userId: user.id },
+      });
+
+    const request = await this.databaseService.extendedClient.request.findFirst(
+      {
+        where: {
+          AND: [
+            { requesteeProfileId: currentUserProfile.id },
+            { status: 'ACTIVE' },
+          ],
+        },
+      },
+    );
+    console.log('request', request, currentUserProfile);
+    const timeLeftForExpiry = request?.expiry
+      ? new Date(new Date(request.expiry).getTime() - Date.now()).toISOString()
+      : null;
+
     return {
       firebase: this.configService.get('firebase'),
       reclaim: this.configService.get('reclaim'),
+      timeLeftForExpiry,
     };
   }
 

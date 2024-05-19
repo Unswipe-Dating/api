@@ -9,6 +9,7 @@ import { AuthResolver } from './auth.resolver';
 import { JwtStrategy } from './jwt.strategy';
 import { SecurityConfig } from '../common/configs/config.interface';
 import { UsersService } from '../users/users.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UsersService } from '../users/users.service';
     GqlAuthGuard,
     PasswordService,
     UsersService,
+    DatabaseService,
   ],
   exports: [GqlAuthGuard],
 })

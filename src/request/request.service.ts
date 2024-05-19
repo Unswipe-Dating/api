@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RequestInput } from './dto/createRequest.input';
 import { DatabaseService } from 'src/database/database.service';
 import { Request } from './models/request.model';
+import { UserIdPaginatedArgs } from 'src/profiles/args/user-id-paginated.args';
 
 @Injectable()
 export class RequestService {
@@ -28,7 +29,7 @@ export class RequestService {
       });
 
     // TODO: Handle the case where requestee is already exclusive with someone else
-    // TODO: Think & work around edge cases here. 
+    // TODO: Think & work around edge cases here.
     if (!existingRequest) {
       return this.databaseService.extendedClient.request.create({
         data: {
@@ -47,6 +48,34 @@ export class RequestService {
     } else {
       throw new Error('Request between these profiles already exists.');
     }
+  }
+
+  async getRequestsByUser(data: UserIdPaginatedArgs) {
+    const currentUserProfile =
+      await this.databaseService.extendedClient.profile.findUnique({
+        where: { userId: data.userId },
+      });
+    const requests = await this.databaseService.extendedClient.request.findMany(
+      {
+        where: {
+          requesteeProfileId: currentUserProfile.id,
+        },
+      },
+    );
+    console.log('DEBUG', requests);
+    const profileIds = requests.map((r) => r.requesterProfileId);
+    console.log('DEBUG', profileIds);
+    const profiles = await this.databaseService.extendedClient.profile.findMany(
+      {
+        where: {
+          id: {
+            in: profileIds,
+          },
+        },
+      },
+    );
+    console.log('DEBUG', profiles);
+    return profiles;
   }
 
   async getRequest(requestId: string): Promise<Request> {
