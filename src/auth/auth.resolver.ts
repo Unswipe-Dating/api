@@ -48,7 +48,9 @@ export class AuthResolver {
         where: {
           AND: [
             { requesteeProfileId: currentUserProfile.id },
-            { status: 'ACTIVE' },
+            {
+              OR: [{ status: 'ACTIVE' }, { status: 'MATCHED' }],
+            },
           ],
         },
       },
@@ -59,9 +61,10 @@ export class AuthResolver {
       : null;
 
     return {
-      firebase: this.configService.get('firebase'),
+      firebase: { ...this.configService.get('firebase'), customToken: '' }, // TODO: Implement custom token for a jwt
       reclaim: this.configService.get('reclaim'),
       timeLeftForExpiry,
+      status: request?.status,
     };
   }
 
