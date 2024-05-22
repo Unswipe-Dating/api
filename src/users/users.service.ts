@@ -5,7 +5,11 @@ import { ChangePasswordInput } from './dto/change-password.input';
 import { SignupInput } from 'src/auth/dto/signup.input';
 import { ConfigService } from '@nestjs/config';
 import { SecurityConfig } from 'src/common/configs/config.interface';
-import { User } from './models/user.model';
+import admin from 'firebase-admin';
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+console.log('serviceAccount', serviceAccount);
 
 @Injectable()
 export class UsersService {
@@ -32,12 +36,22 @@ export class UsersService {
   async createUserIfDoesntExist(id: string, userInput?: Partial<SignupInput>) {
     let user = await this.prisma.user.findFirst({ where: { id: id } });
     if (!user) {
+      const app = admin.initializeApp(
+        {
+          credential: admin.credential.cert(
+            serviceAccount as admin.ServiceAccount,
+          ),
+        },
+        'unswipe',
+      );
+      const firebaseCustomToken = await app.auth().createCustomToken(id);
       user = await this.updateUser(id, {
         id: id,
         phone: id,
         email: userInput?.email,
         country: userInput?.country || '',
         tAndCConsent: userInput?.tAndCConsent || false,
+        firebaseCustomToken: firebaseCustomToken,
       });
     }
     return user;

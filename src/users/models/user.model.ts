@@ -39,4 +39,7 @@ export class User extends BaseModel {
 
   @Field()
   country: string;
+
+  @Field({ nullable: true })
+  firebaseCustomToken: string;
 }

@@ -189,6 +189,7 @@ enum RequestType {
 input SignupInput {
   country: String
   email: String
+  firebaseCustomToken: String
   id: String!
   phone: String!
   tAndCConsent: Boolean
@@ -250,6 +251,7 @@ type User {
 
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
+  firebaseCustomToken: String
   firstname: String
   id: String!
   lastname: String
