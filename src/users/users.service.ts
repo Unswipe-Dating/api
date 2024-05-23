@@ -13,14 +13,13 @@ console.log('serviceAccount', serviceAccount);
 
 @Injectable()
 export class UsersService {
-  private readonly firebaseApp: any;
   constructor(
     private prisma: PrismaService,
     private passwordService: PasswordService,
     private readonly configService: ConfigService,
   ) {
     if (!admin.apps.length) {
-      this.firebaseApp = admin.initializeApp(
+      admin.initializeApp(
         {
           credential: admin.credential.cert(
             serviceAccount as admin.ServiceAccount,
@@ -32,10 +31,31 @@ export class UsersService {
   }
 
   async updateUser(userId: string, newUserData: SignupInput) {
+    const currentUser = await this.prisma.user.findUnique({
+      select: {
+        fcmRegisterationTokens: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
+    const existingTokenIds =
+      currentUser?.fcmRegisterationTokens.map((token) => token) ?? [];
+    let newTokenIds = existingTokenIds || [];
+    if (newUserData?.fcmRegisterationToken) {
+      newTokenIds = Array.from(
+        new Set([...existingTokenIds, newUserData?.fcmRegisterationToken]),
+      );
+      delete newUserData?.fcmRegisterationToken;
+    }
+
     return this.prisma.user.upsert({
       update: newUserData,
       create: {
         ...newUserData,
+        fcmRegisterationTokens: {
+          set: newTokenIds,
+        },
         password:
           this.configService.get<SecurityConfig>('security').defaultPassword,
       },
@@ -48,9 +68,20 @@ export class UsersService {
   async createUserIfDoesntExist(id: string, userInput?: Partial<SignupInput>) {
     let user = await this.prisma.user.findFirst({ where: { id: id } });
     if (!user) {
-      const firebaseCustomToken = await this.firebaseApp
-        .auth()
-        .createCustomToken(id);
+      let app;
+      if (!admin.apps.length) {
+        app = admin.initializeApp(
+          {
+            credential: admin.credential.cert(
+              serviceAccount as admin.ServiceAccount,
+            ),
+          },
+          'unswipe',
+        );
+      } else {
+        app = admin.app('unswipe');
+      }
+      const firebaseCustomToken = await app.auth().createCustomToken(id);
       user = await this.updateUser(id, {
         id: id,
         phone: id,
@@ -58,6 +89,7 @@ export class UsersService {
         country: userInput?.country || '',
         tAndCConsent: userInput?.tAndCConsent || false,
         firebaseCustomToken: firebaseCustomToken,
+        fcmRegisterationToken: userInput?.fcmRegisterationToken,
       });
     }
     return user;

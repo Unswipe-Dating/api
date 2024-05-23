@@ -15,6 +15,7 @@ Table User {
   lastname String
   blockedListUserIds String[] [not null]
   firebaseCustomToken String
+  fcmRegisterationTokens String[] [not null]
   wallet Wallet
   chats Chat [not null]
   prompts Prompt [not null]

@@ -105,9 +105,14 @@ export class AuthResolver {
   }
 
   @Mutation(() => Token, { nullable: true })
-  async validateOTP(@Args('data') { id, otp, phone, otpOrderId }: LoginInput) {
+  async validateOTP(
+    @Args('data')
+    { id, otp, phone, otpOrderId, fcmRegisterationToken }: LoginInput,
+  ) {
     console.log('OTP recieved for login:', otp);
-    const user = await this.userService.createUserIfDoesntExist(id);
+    const user = await this.userService.createUserIfDoesntExist(id, {
+      fcmRegisterationToken: fcmRegisterationToken,
+    });
     const otplessConfig = this.configService.get<OTPLessConfig>('otpless');
     try {
       const result = await otpless.verifyOTP(

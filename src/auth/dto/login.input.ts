@@ -18,4 +18,7 @@ export class LoginInput {
 
   @Field({ nullable: true })
   otpOrderId: string;
+
+  @Field({ nullable: true })
+  fcmRegisterationToken: string;
 }

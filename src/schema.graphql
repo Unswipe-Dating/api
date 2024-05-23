@@ -55,6 +55,7 @@ A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 scalar JWT
 
 input LoginInput {
+  fcmRegisterationToken: String
   id: String!
   otp: String
   otpOrderId: String
@@ -189,6 +190,7 @@ enum RequestType {
 input SignupInput {
   country: String
   email: String
+  fcmRegisterationToken: String
   firebaseCustomToken: String
   id: String!
   phone: String!

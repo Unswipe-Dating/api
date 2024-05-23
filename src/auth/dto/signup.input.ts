@@ -24,4 +24,7 @@ export class SignupInput {
 
   @Field({ nullable: true })
   firebaseCustomToken: string;
+
+  @Field({ nullable: true })
+  fcmRegisterationToken: string;
 }

@@ -52,24 +52,25 @@ enum DatingPreference {
 }
 
 model User {
-  id                  String    @id @default(cuid())
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  email               String?   @unique
-  phone               String    @unique
-  country             String
-  password            String
-  tAndCConsent        Boolean
-  firstname           String?
-  lastname            String?
-  blockedListUserIds  String[]
-  firebaseCustomToken String?
-  wallet              Wallet?
-  chats               Chat[]
-  prompts             Prompt[]
-  Request             Request[]
-  profileId           String?
-  Profile             Profile?
+  id                     String    @id @default(cuid())
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  email                  String?   @unique
+  phone                  String    @unique
+  country                String
+  password               String
+  tAndCConsent           Boolean
+  firstname              String?
+  lastname               String?
+  blockedListUserIds     String[]
+  firebaseCustomToken    String?
+  fcmRegisterationTokens String[]
+  wallet                 Wallet?
+  chats                  Chat[]
+  prompts                Prompt[]
+  Request                Request[]
+  profileId              String?
+  Profile                Profile?
 }
 
 model Profile {
