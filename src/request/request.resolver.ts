@@ -14,11 +14,17 @@ import { MatchRequestInput } from './dto/matchRequest.input';
 import { PaginatedRequest } from './models/paginated-request.model';
 import { UserIdPaginatedArgs } from 'src/profiles/args/user-id-paginated.args';
 import { Profile } from 'src/profiles/models/profile.model';
+import { NotificationService } from './notifications.service';
+import { PrismaService } from 'nestjs-prisma';
 
 @Resolver()
-// @UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard)
 export class RequestResolver {
-  constructor(private requestService: RequestService) {}
+  constructor(
+    private requestService: RequestService,
+    private readonly notificationService: NotificationService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Request)
@@ -26,7 +32,43 @@ export class RequestResolver {
     @UserEntity() user: User,
     @Args('data') requestData: RequestInput,
   ) {
-    return this.requestService.createRequest(user?.id, requestData);
+    const requesteeProfile = await this.prismaService.profile.findFirst({
+      where: {
+        id: requestData.requesteeProfileId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    const request = await this.requestService.createRequest(user?.id, {
+      ...requestData,
+      requesteeUserId: requesteeProfile.userId,
+    });
+
+    try {
+      // Send notification for the request to the user
+      const userWithTokens = await this.prismaService.user.findUnique({
+        where: { id: requesteeProfile?.userId },
+        select: { fcmRegisterationTokens: true, id: true },
+      });
+
+      console.log('DEBUG', userWithTokens);
+      // Send message to each of the tokens stored for this requestee.
+      userWithTokens?.fcmRegisterationTokens.forEach(async (token) => {
+        const result = await this.notificationService.sendMessage({
+          token: token,
+          notification: {
+            title: 'You have a new request!',
+            body: 'Open the app to see who it is', // TODO: Add data field here if needed.
+          },
+        });
+        console.log('result', result);
+      });
+    } catch (error) {
+      console.error('Could not send notifcation to', request.id);
+    }
+    return request;
   }
 
   @UseGuards(GqlAuthGuard)
@@ -41,10 +83,43 @@ export class RequestResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Request)
   async matchRequest(@Args('data') data: MatchRequestInput) {
-    return this.requestService.updateRequest({
+    const request = await this.requestService.updateRequest({
       id: data.id,
       status: RequestStatus.MATCHED,
     });
+    try {
+      const requesterProfile = await this.prismaService.profile.findFirst({
+        where: {
+          id: request.requesterProfileId,
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      // Send notification for the matched requester
+      const userWithTokens = await this.prismaService.user.findUnique({
+        where: { id: requesterProfile?.userId },
+        select: { fcmRegisterationTokens: true },
+      });
+
+      console.log('DEBUG (match) request', userWithTokens);
+      // Send message to each of the tokens stored for this requestee.
+      userWithTokens?.fcmRegisterationTokens.forEach(async (token) => {
+        const result = await this.notificationService.sendMessage({
+          token: token,
+          notification: {
+            title: 'You have a new match!',
+            body: 'Open the app to see who it is', // TODO: Add data field here if needed.
+          },
+        });
+        console.log('result', result);
+      });
+    } catch (error) {
+      console.error('Could not send notifcation to', request.id);
+    }
+
+    return request;
   }
 
   @UseGuards(GqlAuthGuard)

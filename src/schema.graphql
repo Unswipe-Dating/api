@@ -153,12 +153,14 @@ type Request {
   expiry: DateTime!
   id: ID!
   requesteeProfileId: String
+  requesteeUserId: String
   requesterProfileId: String
   status: RequestStatus!
   type: RequestType!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
+  userId: String
 }
 
 input RequestInput {
@@ -167,9 +169,11 @@ input RequestInput {
   challengeVerificationStatus: ChallengeVerificationStatus
   expiry: String!
   requesteeProfileId: String
+  requesteeUserId: String
   requesterProfileId: String
   status: RequestStatus!
   type: RequestType!
+  userId: String
 }
 
 """Defines the status of the request"""
@@ -253,6 +257,7 @@ type User {
 
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
+  fcmRegisterationTokens: [String!]
   firebaseCustomToken: String
   firstname: String
   id: String!

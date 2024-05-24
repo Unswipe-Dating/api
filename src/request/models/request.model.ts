@@ -30,6 +30,12 @@ export class Request extends BaseModel {
   type: RequestType;
 
   @Field(() => String, { nullable: true })
+  userId?: string;
+
+  @Field(() => String, { nullable: true })
+  requesteeUserId?: string;
+
+  @Field(() => String, { nullable: true })
   requesterProfileId?: string;
 
   @Field(() => String, { nullable: true })

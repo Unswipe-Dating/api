@@ -3,6 +3,7 @@ import { RequestInput } from './dto/createRequest.input';
 import { DatabaseService } from 'src/database/database.service';
 import { Request } from './models/request.model';
 import { UserIdPaginatedArgs } from 'src/profiles/args/user-id-paginated.args';
+import { NotificationService } from './notifications.service';
 
 @Injectable()
 export class RequestService {
@@ -38,6 +39,7 @@ export class RequestService {
           userId: userId,
           requesterProfileId: requestObj.requesterProfileId,
           requesteeProfileId: requestObj.requesteeProfileId,
+          requesteeUserId: requestObj.requesteeUserId,
           expiry: requestObj.expiry,
           status: requestObj.status,
           challenge: requestObj.challenge,

@@ -42,4 +42,7 @@ export class User extends BaseModel {
 
   @Field({ nullable: true })
   firebaseCustomToken: string;
+
+  @Field({ nullable: true })
+  fcmRegisterationTokens: string[];
 }
