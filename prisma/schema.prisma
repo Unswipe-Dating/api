@@ -63,6 +63,7 @@ model User {
   firstname              String?
   lastname               String?
   blockedListUserIds     String[]
+  skippedUserIds         String[]
   firebaseCustomToken    String?
   fcmRegisterationTokens String[]
   wallet                 Wallet?

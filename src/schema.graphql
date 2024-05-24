@@ -78,6 +78,7 @@ type Mutation {
   rejectRequest(data: RejectRequestInput!): Request!
   requestOTP(data: LoginInput!): Otp!
   signup(data: SignupInput!): Auth!
+  skipProfile(data: SkipProfileInput!): String!
   updateProfile(data: UpsertProfileInput!): Profile!
   updateRequest(data: UpdateRequestInput!): Request!
   updateUser(data: SignupInput!): User!
@@ -201,6 +202,10 @@ input SignupInput {
   tAndCConsent: Boolean
 }
 
+input SkipProfileInput {
+  id: String
+}
+
 type Token {
   """JWT access token"""
   accessToken: JWT
@@ -264,6 +269,7 @@ type User {
   lastname: String
   phone: String!
   profileId: String
+  skippedUserIds: [String!]
   tAndCConsent: Boolean!
 
   """Identifies the date and time when the object was last updated."""

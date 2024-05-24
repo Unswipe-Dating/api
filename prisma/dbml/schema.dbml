@@ -14,6 +14,7 @@ Table User {
   firstname String
   lastname String
   blockedListUserIds String[] [not null]
+  skippedUserIds String[] [not null]
   firebaseCustomToken String
   fcmRegisterationTokens String[] [not null]
   wallet Wallet

@@ -45,4 +45,7 @@ export class User extends BaseModel {
 
   @Field({ nullable: true })
   fcmRegisterationTokens: string[];
+
+  @Field({ nullable: true })
+  skippedUserIds: string[];
 }

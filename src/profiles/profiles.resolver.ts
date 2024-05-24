@@ -13,6 +13,7 @@ import { User } from 'src/users/models/user.model';
 import { UserEntity } from 'src/common/decorators/user.decorator';
 import { PaginatedProfile } from './models/paginated-profile.model';
 import { sortProfilesByDistance } from 'src/common/helpers/algorithm/sortProfilesByDistance';
+import { SkipProfileInput } from './dto/skipProfile.input';
 
 @Resolver(() => Profile)
 @UseGuards(GqlAuthGuard)
@@ -32,6 +33,39 @@ export class ProfilesResolver {
         },
       });
     return upsertProfile;
+  }
+
+  @Mutation(() => String)
+  @UseGuards(GqlAuthGuard)
+  async skipProfile(
+    @UserEntity() user: User,
+    @Args('data') data: SkipProfileInput,
+  ) {
+    const userToSkip =
+      await this.databaseService.extendedClient.profile.findFirst({
+        where: {
+          id: data.id,
+        },
+        select: {
+          userId: true,
+        },
+      });
+
+    const skippedUsers = Array.from(
+      new Set([...(user.skippedUserIds || []), userToSkip.userId]),
+    );
+    await this.databaseService.extendedClient.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        skippedUserIds: {
+          set: skippedUsers,
+        },
+      },
+    });
+
+    return userToSkip.userId;
   }
 
   @Mutation(() => Profile)
@@ -152,7 +186,11 @@ export class ProfilesResolver {
         where: {
           userId: {
             not: {
-              in: [data.userId, ...user.blockedListUserIds],
+              in: [
+                data.userId,
+                ...user.blockedListUserIds,
+                ...user.skippedUserIds,
+              ],
             },
           },
           gender: currentUserProfile.datingPreference,
