@@ -41,6 +41,12 @@ export class RequestResolver {
       },
     });
 
+    const requesterProfile = await this.prismaService.profile.findFirst({
+      where: {
+        id: requestData.requesterProfileId,
+      },
+    });
+
     const request = await this.requestService.createRequest(user?.id, {
       ...requestData,
       requesteeUserId: requesteeProfile.userId,
@@ -59,8 +65,8 @@ export class RequestResolver {
         const result = await this.notificationService.sendMessage({
           token: token,
           notification: {
-            title: 'You have a new request!',
-            body: 'Open the app to see who it is', // TODO: Add data field here if needed.
+            title: `${requesterProfile.name} gave up swiping for you.`,
+            body: '', // TODO: Add data field here if needed.
           },
         });
         console.log('result', result);
@@ -109,7 +115,7 @@ export class RequestResolver {
         const result = await this.notificationService.sendMessage({
           token: token,
           notification: {
-            title: 'You have a new match!',
+            title: 'You found a match!',
             body: 'Open the app to see who it is', // TODO: Add data field here if needed.
           },
         });
