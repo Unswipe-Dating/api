@@ -43,8 +43,9 @@ export class AuthResolver {
         where: { userId: user.id },
       });
 
-    const request = await this.databaseService.extendedClient.request.findFirst(
-      {
+    let request;
+    if (currentUserProfile) {
+      request = await this.databaseService.extendedClient.request.findFirst({
         where: {
           AND: [
             { requesteeProfileId: currentUserProfile.id },
@@ -53,8 +54,8 @@ export class AuthResolver {
             },
           ],
         },
-      },
-    );
+      });
+    }
     console.log('request', request, currentUserProfile);
     const timeLeftForExpiry = request?.expiry
       ? new Date(new Date(request.expiry).getTime() - Date.now()).toISOString()
@@ -65,6 +66,7 @@ export class AuthResolver {
       reclaim: this.configService.get('reclaim'),
       timeLeftForExpiry,
       status: request?.status,
+      request: request,
     };
   }
 
