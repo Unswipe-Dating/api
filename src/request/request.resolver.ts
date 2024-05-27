@@ -49,6 +49,7 @@ export class RequestResolver {
 
     const request = await this.requestService.createRequest(user?.id, {
       ...requestData,
+      expiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       requesteeUserId: requesteeProfile.userId,
     });
 

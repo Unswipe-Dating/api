@@ -41,7 +41,7 @@ export class RequestInput extends BaseModel {
   @Field(() => String, { nullable: true })
   requesteeProfileId?: string;
 
-  @Field()
+  @Field({ nullable: true })
   expiry: string;
 
   @Field(() => RequestStatus)

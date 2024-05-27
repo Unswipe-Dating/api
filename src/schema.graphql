@@ -168,7 +168,7 @@ input RequestInput {
   challenge: JSONObject
   challengeVerification: String
   challengeVerificationStatus: ChallengeVerificationStatus
-  expiry: String!
+  expiry: String
   requesteeProfileId: String
   requesteeUserId: String
   requesterProfileId: String
