@@ -60,6 +60,7 @@ export class AuthResolver {
             {
               OR: [{ status: 'ACTIVE' }, { status: 'MATCHED' }],
             },
+            { userId: user.id },
           ],
         },
       });
