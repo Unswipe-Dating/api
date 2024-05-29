@@ -6,6 +6,7 @@ import { SignupInput } from 'src/auth/dto/signup.input';
 import { ConfigService } from '@nestjs/config';
 import { SecurityConfig } from 'src/common/configs/config.interface';
 import admin from 'firebase-admin';
+import { ChatStatus } from '@prisma/client';
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
@@ -28,6 +29,31 @@ export class UsersService {
         'unswipe',
       );
     }
+  }
+
+  async upsertChatRoom(data: { roomId: string; userId: string }) {
+    // First, set all chats with the same userId but different roomId to INACTIVE
+    await this.prisma.chat.updateMany({
+      where: {
+        userId: data.userId,
+        NOT: {
+          roomId: data.roomId,
+        },
+      },
+      data: {
+        status: ChatStatus.INACTIVE,
+      },
+    });
+
+    // Then, create the chat with the given roomId and userId to ACTIVE
+    const chat = await this.prisma.chat.create({
+      data: {
+        roomId: data.roomId,
+        userId: data.userId,
+        status: ChatStatus.ACTIVE,
+      },
+    });
+    return chat;
   }
 
   async updateUser(userId: string, newUserData: SignupInput) {

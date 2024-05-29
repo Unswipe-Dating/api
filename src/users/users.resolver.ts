@@ -81,4 +81,15 @@ export class UsersResolver {
     await this.usersService.blockUsersForId(id, blockedUsers);
     return blockedUsers;
   }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => String)
+  async createActiveChatRoom(@UserEntity() user: User, @Args('id') id: string) {
+    await this.usersService.upsertChatRoom({
+      roomId: id,
+      userId: user.id,
+    });
+
+    return 'ok';
+  }
 }

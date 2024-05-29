@@ -23,6 +23,8 @@ import { GqlAuthGuard } from './gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { UserEntity } from 'src/common/decorators/user.decorator';
 import { DatabaseService } from 'src/database/database.service';
+import { ChatStatus } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 const otpLength = 6;
 
@@ -33,6 +35,7 @@ export class AuthResolver {
     private readonly userService: UsersService,
     private readonly configService: ConfigService,
     private readonly databaseService: DatabaseService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   @Query(() => GraphQLJSON)
@@ -42,7 +45,12 @@ export class AuthResolver {
       await this.databaseService.extendedClient.profile.findUnique({
         where: { userId: user.id },
       });
-
+    const currentUserActiveChat = await this.prismaService.chat.findFirst({
+      where: {
+        userId: user.id,
+        status: ChatStatus.ACTIVE,
+      },
+    });
     let request;
     if (currentUserProfile) {
       request = await this.databaseService.extendedClient.request.findFirst({
@@ -67,6 +75,7 @@ export class AuthResolver {
       timeLeftForExpiry,
       status: request?.status,
       request: request,
+      chat: currentUserActiveChat,
     };
   }
 

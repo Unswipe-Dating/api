@@ -69,6 +69,7 @@ input MatchRequestInput {
 type Mutation {
   blockUsers(data: BlockUserInput!, id: String!): [String!]!
   changePassword(data: ChangePasswordInput!): User!
+  createActiveChatRoom(id: String!): String!
   createProfile(data: UpsertProfileInput!): Profile!
   createRequest(data: RequestInput!): Request!
   createUser(data: SignupInput!): User!
