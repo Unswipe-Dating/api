@@ -14,6 +14,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 import { S3Options } from './uploader/interfaces';
 import { RequestModule } from './request/request.module';
+import { FirebaseService } from './firebase/firebase.service';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { RequestModule } from './request/request.module';
     AuthModule,
     UsersModule,
     ProfileModule,
+    FirebaseModule,
     UploaderModule.forRoot({
       clientConfig: {
         region: 'ap-southeast-1',
