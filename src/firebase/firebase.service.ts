@@ -60,6 +60,11 @@ export class FirebaseService implements OnModuleInit {
                       },
                     });
 
+                  const senderUserProfile =
+                    await this.prismaService.profile.findFirst({
+                      where: { userId: sender },
+                    });
+
                   const tokens = sentToUserProfile.user?.fcmRegisterationTokens;
                   if (tokens && tokens.length) {
                     await Promise.all(
@@ -68,7 +73,7 @@ export class FirebaseService implements OnModuleInit {
                           await this.notificationService.sendMessage({
                             token: t,
                             notification: {
-                              title: `New message from ${sentToUserProfile?.name}`,
+                              title: `New message from ${senderUserProfile?.name}`,
                               body: messageText,
                             },
                           }),
