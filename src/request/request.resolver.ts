@@ -18,7 +18,7 @@ import { NotificationService } from './notifications.service';
 import { PrismaService } from 'nestjs-prisma';
 
 @Resolver()
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 export class RequestResolver {
   constructor(
     private requestService: RequestService,

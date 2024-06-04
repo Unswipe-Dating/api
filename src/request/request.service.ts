@@ -4,6 +4,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { Request } from './models/request.model';
 import { UserIdPaginatedArgs } from 'src/profiles/args/user-id-paginated.args';
 import { NotificationService } from './notifications.service';
+import { Profile } from 'src/profiles/models/profile.model';
 
 @Injectable()
 export class RequestService {
@@ -64,19 +65,22 @@ export class RequestService {
         },
       },
     );
-    console.log('DEBUG', requests);
     const profileIds = requests.map((r) => r.requesterProfileId);
-    console.log('DEBUG', profileIds);
-    const profiles = await this.databaseService.extendedClient.profile.findMany(
-      {
+    const profiles: Profile[] =
+      await this.databaseService.extendedClient.profile.findMany({
         where: {
           id: {
             in: profileIds,
           },
         },
-      },
-    );
-    console.log('DEBUG', profiles);
+      });
+    // Attach requests alongside profiles
+    for (let i = 0; i < profiles.length; i++) {
+      const p = profiles[i];
+      const request = requests.find((req) => req.requesterProfileId === p.id);
+      p.request = request;
+    }
+
     return profiles;
   }
 

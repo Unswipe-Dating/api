@@ -115,6 +115,7 @@ type Profile {
   name: String
   photoURLs: [String!]
   pronouns: String
+  request: Request
   showTruncatedName: Boolean
 
   """Identifies the date and time when the object was last updated."""

@@ -4,6 +4,7 @@ import { IsNotEmpty } from 'class-validator';
 import { DatingPreference, ZodiacSign } from '@prisma/client';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { User } from 'src/users/models/user.model';
+import { Request } from 'src/request/models/request.model';
 
 @ObjectType()
 export class Profile extends BaseModel {
@@ -61,4 +62,7 @@ export class Profile extends BaseModel {
 
   @Field(() => ZodiacSign, { nullable: true })
   zodiac?: ZodiacSign;
+
+  @Field(() => Request, { nullable: true })
+  request?: Request;
 }
