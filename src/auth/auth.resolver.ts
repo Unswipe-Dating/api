@@ -56,15 +56,20 @@ export class AuthResolver {
       request = await this.databaseService.extendedClient.request.findFirst({
         where: {
           AND: [
-            { requesteeProfileId: currentUserProfile.id },
+            {
+              OR: [
+                { requesteeProfileId: currentUserProfile.id },
+                { userId: user.id },
+              ],
+            },
             {
               OR: [{ status: 'ACTIVE' }, { status: 'MATCHED' }],
             },
-            { userId: user.id },
           ],
         },
       });
     }
+
     console.log('request', request, currentUserProfile);
     const timeLeftForExpiry = request?.expiry
       ? new Date(new Date(request.expiry).getTime() - Date.now()).toISOString()
