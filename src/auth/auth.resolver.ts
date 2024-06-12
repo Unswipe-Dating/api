@@ -57,10 +57,7 @@ export class AuthResolver {
         where: {
           AND: [
             {
-              OR: [
-                { requesteeProfileId: currentUserProfile.id },
-                { userId: user.id },
-              ],
+              { userId: user.id },
             },
             {
               OR: [{ status: 'ACTIVE' }, { status: 'MATCHED' }],
