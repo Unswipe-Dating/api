@@ -60,8 +60,8 @@ export class UsersService {
     const currentUser = await this.prisma.user.findUnique({
       select: {
         fcmRegisterationTokens: true,
-      },
-      where: {
+        },
+        where: {
         id: userId,
       },
     });
@@ -91,23 +91,28 @@ export class UsersService {
     });
   }
 
+  private async getFirebaseCustomToken(id: string) {
+    let app;
+    if (!admin.apps.length) {
+      app = admin.initializeApp(
+        {
+          credential: admin.credential.cert(
+            serviceAccount as admin.ServiceAccount
+          ),
+        },
+        'unswipe'
+      );
+    } else {
+      app = admin.app('unswipe');
+    }
+    const firebaseCustomToken = await app.auth().createCustomToken(id);
+    return firebaseCustomToken;
+  }
+
   async createUserIfDoesntExist(id: string, userInput?: Partial<SignupInput>) {
     let user = await this.prisma.user.findFirst({ where: { id: id } });
     if (!user) {
-      let app;
-      if (!admin.apps.length) {
-        app = admin.initializeApp(
-          {
-            credential: admin.credential.cert(
-              serviceAccount as admin.ServiceAccount,
-            ),
-          },
-          'unswipe',
-        );
-      } else {
-        app = admin.app('unswipe');
-      }
-      const firebaseCustomToken = await app.auth().createCustomToken(id);
+      const firebaseCustomToken = await this.getFirebaseCustomToken(id);
       user = await this.updateUser(id, {
         id: id,
         phone: id,
@@ -117,6 +122,14 @@ export class UsersService {
         firebaseCustomToken: firebaseCustomToken,
         fcmRegisterationToken: userInput?.fcmRegisterationToken,
       });
+    } else {
+      const firebaseCustomToken = await this.getFirebaseCustomToken(id);
+      user = await this.prisma.user.update({
+        data: {
+          firebaseCustomToken: firebaseCustomToken,
+        },
+        where: { id: id },
+      })
     }
     return user;
   }
