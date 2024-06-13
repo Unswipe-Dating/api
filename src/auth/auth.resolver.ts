@@ -56,9 +56,7 @@ export class AuthResolver {
       request = await this.databaseService.extendedClient.request.findFirst({
         where: {
           AND: [
-            {
-              { userId: user.id },
-            },
+            { userId: user.id },
             {
               OR: [{ status: 'ACTIVE' }, { status: 'MATCHED' }],
             },
