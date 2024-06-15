@@ -56,7 +56,12 @@ export class AuthResolver {
       request = await this.databaseService.extendedClient.request.findFirst({
         where: {
           AND: [
-            { userId: user.id },
+            {
+              OR: [
+                { requesteeProfileId: currentUserProfile.id },
+                { userId: user.id },
+              ],
+            },
             {
               OR: [{ status: 'ACTIVE' }, { status: 'MATCHED' }],
             },
@@ -66,16 +71,27 @@ export class AuthResolver {
     }
 
     console.log('request', request, currentUserProfile);
-    const timeLeftForExpiry = request?.expiry
-      ? new Date(new Date(request.expiry).getTime() - Date.now()).toISOString()
-      : null;
+    let timeLeftForExpiry = null;
+    let requestStatus = null;
+    let retRequest = null;
+    if (request?.userId == user?.id) {
+      timeLeftForExpiry = request?.expiry
+        ? new Date(new Date(request.expiry).getTime() - Date.now()).toISOString()
+        : null;
+      retRequest = request;
+      requestStatus = request?.status;
+    }
+    if (request?.status === "MATCHED") {
+      retRequest = request;
+      requestStatus = request?.status;
+    }
 
     return {
       firebase: { ...this.configService.get('firebase'), customToken: '' }, // TODO: Implement custom token for a jwt
       reclaim: this.configService.get('reclaim'),
       timeLeftForExpiry,
-      status: request?.status,
-      request: request,
+      status: requestStatus,
+      request: retRequest,
       chat: currentUserActiveChat,
     };
   }
