@@ -21,7 +21,7 @@ export class ProfilesResolver {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly uploaderService: UploaderService,
-  ) {}
+  ) { }
   @Mutation(() => Profile)
   @UseGuards(GqlAuthGuard)
   async updateProfile(@Args('data') data: UpsertProfileInput) {
@@ -181,6 +181,11 @@ export class ProfilesResolver {
       await this.databaseService.extendedClient.profile.findUnique({
         where: { userId: data.userId },
       });
+    const rejectedProfiles =
+      await this.databaseService.extendedClient.request.findMany({
+        select: { requesteeUserId: true },
+        where: { userId: data.userId, status: "REJECTED" },
+      });
     const profiles = await this.databaseService.extendedClient.profile.findMany(
       {
         where: {
@@ -190,6 +195,7 @@ export class ProfilesResolver {
                 data.userId,
                 ...user.blockedListUserIds,
                 ...user.skippedUserIds,
+                ...rejectedProfiles.map((profile) => profile.requesteeUserId)
               ],
             },
           },
