@@ -8,7 +8,7 @@ import { Profile } from 'src/profiles/models/profile.model';
 
 @Injectable()
 export class RequestService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService) { }
 
   async updateRequest(requestObj: Partial<RequestInput>) {
     return this.databaseService.extendedClient.request.update({
@@ -62,6 +62,9 @@ export class RequestService {
       {
         where: {
           requesteeProfileId: currentUserProfile.id,
+          NOT: {
+            status: "REJECTED"
+          }
         },
       },
     );
