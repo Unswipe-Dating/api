@@ -25,7 +25,7 @@ export class RequestResolver {
     private requestService: RequestService,
     private readonly notificationService: NotificationService,
     private readonly prismaService: PrismaService,
-  ) {}
+  ) { }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => CreateRequest)
@@ -78,8 +78,8 @@ export class RequestResolver {
     }
     return {
       ...request,
-      userProfileImage : requesterProfile?.photoURLs?.[0],
-      requesteeProfileImage : requesteeProfile?.photoURLs?.[0]
+      userProfileImage: requesterProfile?.photoURLs?.[0],
+      requesteeProfileImage: requesteeProfile?.photoURLs?.[0]
     };
   }
 
@@ -93,22 +93,32 @@ export class RequestResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Request)
+  @Mutation(() => CreateRequest)
   async matchRequest(@Args('data') data: MatchRequestInput) {
     const request = await this.requestService.updateRequest({
       id: data.id,
       status: RequestStatus.MATCHED,
     });
+    let userProfileImage = null;
+    let requesteeProfileImage = null;
     try {
-      const requesterProfile = await this.prismaService.profile.findFirst({
-        where: {
-          id: request.requesterProfileId,
-        },
-        include: {
-          user: true,
-        },
-      });
-
+      const [requesterProfile, requesteeProfile] = await Promise.all([
+        this.prismaService.profile.findFirst({
+          where: {
+            id: request.requesterProfileId,
+          },
+          include: {
+            user: true,
+          },
+        }),
+        this.prismaService.profile.findFirst({
+          where: {
+            id: request.requesteeProfileId,
+          }
+        })
+      ]);
+      userProfileImage = requesterProfile?.photoURLs?.[0];
+      requesteeProfileImage = requesteeProfile?.photoURLs?.[0];
       // Send notification for the matched requester
       const userWithTokens = await this.prismaService.user.findUnique({
         where: { id: requesterProfile?.userId },
@@ -131,7 +141,11 @@ export class RequestResolver {
       console.error('Could not send notifcation to', request.id);
     }
 
-    return request;
+    return {
+      ...request,
+      userProfileImage: userProfileImage,
+      requesteeProfileImage: requesteeProfileImage
+    };
   }
 
   @UseGuards(GqlAuthGuard)

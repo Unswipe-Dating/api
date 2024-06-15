@@ -96,7 +96,7 @@ type Mutation {
   createRequest(data: RequestInput!): CreateRequest!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
-  matchRequest(data: MatchRequestInput!): Request!
+  matchRequest(data: MatchRequestInput!): CreateRequest!
   refreshToken(data: RefreshTokenInput!): Token!
   rejectRequest(data: RejectRequestInput!): Request!
   requestOTP(data: LoginInput!): Otp!

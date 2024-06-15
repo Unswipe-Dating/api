@@ -74,6 +74,21 @@ export class AuthResolver {
     let timeLeftForExpiry = null;
     let requestStatus = null;
     let retRequest = null;
+    if(request){
+      if(request?.userId == user?.id){
+      request.userProfileImage = currentUserProfile?.photoURLs?.[0];
+      const otherUserProfile = await this.databaseService.extendedClient.profile.findUnique({
+        where: { userId: request.requesteeUserId },
+      });
+      request.requesteeProfileImage = otherUserProfile?.photoURLs?.[0];
+      } else {
+        request.requesteeProfileImage = currentUserProfile?.photoURLs?.[0];
+        const otherUserProfile = await this.databaseService.extendedClient.profile.findUnique({
+          where: { userId: request.userId },
+        });
+        request.userProfileImage = otherUserProfile?.photoURLs?.[0];
+      }
+    }
     if (request?.userId == user?.id) {
       timeLeftForExpiry = request?.expiry
         ? new Date(new Date(request.expiry).getTime() - Date.now()).toISOString()
