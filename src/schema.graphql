@@ -156,6 +156,7 @@ type Request {
   expiry: DateTime!
   id: ID!
   requesteeProfileId: String
+  requesteeProfileImage: String
   requesteeUserId: String
   requesterProfileId: String
   status: RequestStatus!
@@ -164,6 +165,7 @@ type Request {
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
   userId: String
+  userProfileImage: String
 }
 
 input RequestInput {

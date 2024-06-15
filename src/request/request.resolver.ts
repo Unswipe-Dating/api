@@ -75,7 +75,11 @@ export class RequestResolver {
     } catch (error) {
       console.error('Could not send notifcation to', request.id);
     }
-    return request;
+    return {
+      ...request,
+      userProfileImage : requesterProfile?.photoURLs?.[0],
+      requesteeProfileImage : requesteeProfile?.photoURLs?.[0]
+    };
   }
 
   @UseGuards(GqlAuthGuard)
