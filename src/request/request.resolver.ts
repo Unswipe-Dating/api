@@ -16,6 +16,7 @@ import { UserIdPaginatedArgs } from 'src/profiles/args/user-id-paginated.args';
 import { Profile } from 'src/profiles/models/profile.model';
 import { NotificationService } from './notifications.service';
 import { PrismaService } from 'nestjs-prisma';
+import { CreateRequest } from './models/create-request';
 
 @Resolver()
 // @UseGuards(GqlAuthGuard)
@@ -27,7 +28,7 @@ export class RequestResolver {
   ) {}
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Request)
+  @Mutation(() => CreateRequest)
   async createRequest(
     @UserEntity() user: User,
     @Args('data') requestData: RequestInput,

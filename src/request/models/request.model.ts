@@ -41,12 +41,6 @@ export class Request extends BaseModel {
   @Field(() => String, { nullable: true })
   requesteeProfileId?: string;
 
-  @Field(() => String, { nullable: true })
-  userProfileImage?: string;
-
-  @Field(() => String, { nullable: true })
-  requesteeProfileImage?: string;
-
   @Field()
   @IsDateString()
   expiry: Date;

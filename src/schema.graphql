@@ -27,6 +27,28 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
+type CreateRequest {
+  challenge: JSONObject
+  challengeVerification: String
+  challengeVerificationStatus: ChallengeVerificationStatus!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  expiry: DateTime!
+  id: ID!
+  requesteeProfileId: String
+  requesteeProfileImage: String
+  requesteeUserId: String
+  requesterProfileId: String
+  status: RequestStatus!
+  type: RequestType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userId: String
+  userProfileImage: String
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -71,7 +93,7 @@ type Mutation {
   changePassword(data: ChangePasswordInput!): User!
   createActiveChatRoom(id: String!): String!
   createProfile(data: UpsertProfileInput!): Profile!
-  createRequest(data: RequestInput!): Request!
+  createRequest(data: RequestInput!): CreateRequest!
   createUser(data: SignupInput!): User!
   login(data: LoginInput!): Auth!
   matchRequest(data: MatchRequestInput!): Request!
@@ -156,7 +178,6 @@ type Request {
   expiry: DateTime!
   id: ID!
   requesteeProfileId: String
-  requesteeProfileImage: String
   requesteeUserId: String
   requesterProfileId: String
   status: RequestStatus!
@@ -165,7 +186,6 @@ type Request {
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
   userId: String
-  userProfileImage: String
 }
 
 input RequestInput {
