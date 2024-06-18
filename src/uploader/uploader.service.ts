@@ -74,6 +74,7 @@ export class UploaderService {
         userId,
         await UploaderService.streamToBuffer(createReadStream()),
         '.jpg',
+        mimetype
       );
     } catch (error) {
       console.log('ERROR', error);
@@ -109,6 +110,7 @@ export class UploaderService {
     userId: string,
     fileBuffer: Buffer,
     fileExt: string,
+    contentType: string,
   ): Promise<string> {
     const key =
       this.bucketData.folder +
@@ -124,7 +126,8 @@ export class UploaderService {
           Bucket: this.bucketData.name,
           Body: fileBuffer,
           Key: key,
-          ACL: 'bucket-owner-full-control', // TODO: tighten this to ACL policy later
+          ACL: 'bucket-owner-full-control', // TODO: tighten this to ACL policy later,
+          ContentType: contentType
         }),
       );
     } catch (error) {
