@@ -17,15 +17,65 @@ import { Profile } from 'src/profiles/models/profile.model';
 import { NotificationService } from './notifications.service';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateRequest } from './models/create-request';
+import { DatabaseService } from 'src/database/database.service';
+import { SkipProfileInput } from './dto/skipProfile.input';
 
 @Resolver()
 // @UseGuards(GqlAuthGuard)
 export class RequestResolver {
   constructor(
     private requestService: RequestService,
-    private readonly notificationService: NotificationService,
-    private readonly prismaService: PrismaService,
+    private readonly databaseService: DatabaseService
   ) { }
+
+  @Mutation(() => String)
+  @UseGuards(GqlAuthGuard)
+  async skipProfile(
+    @UserEntity() user: User,
+    @Args('data') data: SkipProfileInput,
+  ) {
+    const reverseRequest =
+      await this.databaseService.extendedClient.request.findFirst({
+        where: {
+          requesterProfileId: data.id,
+          requesteeProfileId: user.profileId,
+          status: "ACTIVE"
+        },
+      });
+
+    if (reverseRequest) {
+      await this.requestService.updateRequest({
+        id: reverseRequest.id,
+        status: RequestStatus.REJECTED,
+      });;
+    }
+
+    const userToSkip =
+      await this.databaseService.extendedClient.profile.findFirst({
+        where: {
+          id: data.id,
+        },
+        select: {
+          userId: true,
+        },
+      });
+
+    const skippedUsers = Array.from(
+      new Set([...(user.skippedUserIds || []), userToSkip.userId]),
+    );
+    await this.databaseService.extendedClient.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        skippedUserIds: {
+          set: skippedUsers,
+        },
+      },
+    });
+
+    return userToSkip.userId;
+  }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => CreateRequest)
@@ -33,54 +83,21 @@ export class RequestResolver {
     @UserEntity() user: User,
     @Args('data') requestData: RequestInput,
   ) {
-    const requesteeProfile = await this.prismaService.profile.findFirst({
-      where: {
-        id: requestData.requesteeProfileId,
-      },
-      include: {
-        user: true,
-      },
-    });
 
-    const requesterProfile = await this.prismaService.profile.findFirst({
-      where: {
-        id: requestData.requesterProfileId,
-      },
-    });
-
-    const request = await this.requestService.createRequest(user?.id, {
-      ...requestData,
-      expiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      requesteeUserId: requesteeProfile.userId,
-    });
-
-    try {
-      // Send notification for the request to the user
-      const userWithTokens = await this.prismaService.user.findUnique({
-        where: { id: requesteeProfile?.userId },
-        select: { fcmRegisterationTokens: true, id: true },
+    const reverseRequest =
+      await this.databaseService.extendedClient.request.findFirst({
+        where: {
+          requesterProfileId: requestData.requesteeProfileId,
+          requesteeProfileId: requestData.requesterProfileId,
+          status: "ACTIVE"
+        },
       });
 
-      console.log('DEBUG', userWithTokens);
-      // Send message to each of the tokens stored for this requestee.
-      userWithTokens?.fcmRegisterationTokens.forEach(async (token) => {
-        const result = await this.notificationService.sendMessage({
-          token: token,
-          notification: {
-            title: `${requesterProfile.name} gave up swiping for you.`,
-            body: '', // TODO: Add data field here if needed.
-          },
-        });
-        console.log('result', result);
-      });
-    } catch (error) {
-      console.error('Could not send notifcation to', request.id);
+    if (reverseRequest) {
+      return this.requestService.matchRequestById(reverseRequest.id);
     }
-    return {
-      ...request,
-      userProfileImage: requesterProfile?.photoURLs?.[0],
-      requesteeProfileImage: requesteeProfile?.photoURLs?.[0]
-    };
+
+    return await this.requestService.createNewRequest(requestData, user);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -95,57 +112,7 @@ export class RequestResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => CreateRequest)
   async matchRequest(@Args('data') data: MatchRequestInput) {
-    const request = await this.requestService.updateRequest({
-      id: data.id,
-      status: RequestStatus.MATCHED,
-    });
-    let userProfileImage = null;
-    let requesteeProfileImage = null;
-    try {
-      const [requesterProfile, requesteeProfile] = await Promise.all([
-        this.prismaService.profile.findFirst({
-          where: {
-            id: request.requesterProfileId,
-          },
-          include: {
-            user: true,
-          },
-        }),
-        this.prismaService.profile.findFirst({
-          where: {
-            id: request.requesteeProfileId,
-          }
-        })
-      ]);
-      userProfileImage = requesterProfile?.photoURLs?.[0];
-      requesteeProfileImage = requesteeProfile?.photoURLs?.[0];
-      // Send notification for the matched requester
-      const userWithTokens = await this.prismaService.user.findUnique({
-        where: { id: requesterProfile?.userId },
-        select: { fcmRegisterationTokens: true },
-      });
-
-      console.log('DEBUG (match) request', userWithTokens);
-      // Send message to each of the tokens stored for this requestee.
-      userWithTokens?.fcmRegisterationTokens.forEach(async (token) => {
-        const result = await this.notificationService.sendMessage({
-          token: token,
-          notification: {
-            title: 'You found a match!',
-            body: 'Open the app to see who it is', // TODO: Add data field here if needed.
-          },
-        });
-        console.log('result', result);
-      });
-    } catch (error) {
-      console.error('Could not send notifcation to', request.id);
-    }
-
-    return {
-      ...request,
-      userProfileImage: userProfileImage,
-      requesteeProfileImage: requesteeProfileImage
-    };
+    return await this.requestService.matchRequestById(data.id);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -158,6 +125,7 @@ export class RequestResolver {
   async getRequest(@Args() data: RequestIdArgs) {
     return await this.requestService.getRequest(data.id);
   }
+
   @Query(() => [Profile])
   async getRequestedProfilesForUser(@Args('data') data: UserIdPaginatedArgs) {
     return await this.requestService.getRequestsByUser(data);
