@@ -13,6 +13,24 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
             return JSON.parse(profile.interests);
           },
         },
+        work: {
+          needs: { work: true },
+          compute(profile) {
+            return JSON.parse(profile.work);
+          },
+        },
+        lifestyle: {
+          needs: { lifestyle: true },
+          compute(profile) {
+            return JSON.parse(profile.lifestyle);
+          },
+        },
+        values: {
+          needs: { values: true },
+          compute(profile) {
+            return JSON.parse(profile.values);
+          },
+        },
       },
       request: {
         challenge: {
@@ -38,7 +56,24 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
               interests: JSON.stringify(args.data.interests),
             };
           }
-
+          if (args.data?.work) {
+            args.data = {
+              ...args.data,
+              work: JSON.stringify(args.data.work),
+            };
+          }
+          if (args.data?.lifestyle) {
+            args.data = {
+              ...args.data,
+              lifestyle: JSON.stringify(args.data.lifestyle),
+            };
+          }
+          if (args.data?.values) {
+            args.data = {
+              ...args.data,
+              values: JSON.stringify(args.data.values),
+            };
+          }
           return query(args);
         },
         async create({ args, query }) {
@@ -46,6 +81,24 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
             args.data = {
               ...args.data,
               interests: JSON.stringify(args.data.interests),
+            };
+          }
+          if (args.data?.work) {
+            args.data = {
+              ...args.data,
+              work: JSON.stringify(args.data.work),
+            };
+          }
+          if (args.data?.lifestyle) {
+            args.data = {
+              ...args.data,
+              lifestyle: JSON.stringify(args.data.lifestyle),
+            };
+          }
+          if (args.data?.values) {
+            args.data = {
+              ...args.data,
+              values: JSON.stringify(args.data.values),
             };
           }
           return query(args);
@@ -56,12 +109,48 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
               ...args.create,
               interests: JSON.stringify(args.create.interests),
             };
+            if (args.create?.work) {
+              args.create = {
+                ...args.create,
+                work: JSON.stringify(args.create.work),
+              };
+            }
+            if (args.create?.lifestyle) {
+              args.create = {
+                ...args.create,
+                lifestyle: JSON.stringify(args.create.lifestyle),
+              };
+            }
+            if (args.create?.values) {
+              args.create = {
+                ...args.create,
+                values: JSON.stringify(args.create.values),
+              };
+            }
           }
           if (args.update?.interests) {
             args.update = {
               ...args.update,
               interests: JSON.stringify(args.update.interests),
             };
+            if (args.update?.work) {
+              args.update = {
+                ...args.update,
+                work: JSON.stringify(args.update.work),
+              };
+            }
+            if (args.update?.lifestyle) {
+              args.update = {
+                ...args.update,
+                lifestyle: JSON.stringify(args.update.lifestyle),
+              };
+            }
+            if (args.update?.values) {
+              args.update = {
+                ...args.update,
+                values: JSON.stringify(args.update.values),
+              };
+            }
           }
           return query(args);
         },
@@ -108,8 +197,7 @@ export const prismaExtendedClient = (prismaClient: PrismaClient) =>
 @Injectable()
 export class DatabaseService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   readonly extendedClient = prismaExtendedClient(this);
 
   constructor() {

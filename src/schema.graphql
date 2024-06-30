@@ -132,6 +132,7 @@ type Profile {
   id: String
   interests: JSONObject
   languages: [String!]
+  lifestyle: JSONObject
   location: String
   locationCoordinates: [String!]
   name: String
@@ -144,6 +145,8 @@ type Profile {
   updatedAt: DateTime!
   user: User
   userId: String!
+  values: JSONObject
+  work: JSONObject
   zodiac: ZodiacSign
 }
 
@@ -270,6 +273,7 @@ input UpsertProfileInput {
   id: String
   interests: JSONObject
   languages: [String!]
+  lifestyle: JSONObject
   location: String
   locationCoordinates: [String!]
   name: String
@@ -277,6 +281,8 @@ input UpsertProfileInput {
   showTruncatedName: Boolean
   updatedAt: String
   userId: String!
+  values: JSONObject
+  work: JSONObject
   zodiac: ZodiacSign
 }
 

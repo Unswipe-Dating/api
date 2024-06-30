@@ -44,6 +44,9 @@ Table Profile {
   photoURLs String[] [not null]
   datingPreference DatingPreference
   interests String
+  work String
+  lifestyle String
+  values String
   user User [not null]
   userId String [unique, not null]
 }

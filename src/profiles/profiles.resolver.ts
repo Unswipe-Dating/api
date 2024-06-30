@@ -58,6 +58,9 @@ export class ProfilesResolver {
           locationCoordinates: data.locationCoordinates,
           zodiac: data.zodiac,
           languages: data.languages,
+          work: data.work,
+          lifestyle: data.lifestyle,
+          values: data.values,
         },
         create: {
           userId: data.userId,
@@ -75,6 +78,9 @@ export class ProfilesResolver {
           locationCoordinates: data.locationCoordinates,
           zodiac: data.zodiac,
           languages: data.languages,
+          work: data.work,
+          lifestyle: data.lifestyle,
+          values: data.values,
         },
       });
 
