@@ -65,4 +65,13 @@ export class Profile extends BaseModel {
 
   @Field(() => Request, { nullable: true })
   request?: Request;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  work: string;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  lifestyle: string;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  values: string;
 }

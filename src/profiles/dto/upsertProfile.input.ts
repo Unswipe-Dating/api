@@ -78,4 +78,13 @@ export class UpsertProfileInput {
 
   @Field(() => ZodiacSign, { nullable: true })
   zodiac?: ZodiacSign;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  work: string;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  lifestyle: string;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  values: string;
 }
