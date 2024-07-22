@@ -111,6 +111,7 @@ export class AuthResolver {
     };
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Auth)
   async signup(@Args('data') data: SignupInput) {
     const { accessToken, refreshToken, user } = await this.auth.signupOrLogin(
@@ -123,6 +124,7 @@ export class AuthResolver {
     };
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Auth)
   async login(@Args('data') { phone, id }: LoginInput) {
     const { accessToken, refreshToken } = await this.auth.login(phone, id);
