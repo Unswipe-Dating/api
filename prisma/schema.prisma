@@ -86,6 +86,8 @@ model Profile {
   completed           Boolean?
   name                String?
   showTruncatedName   Boolean?
+  hideDatingPreference   Boolean?       @default(false)
+  hidePronouns        Boolean?          @default(false)
   dob                 String?
   gender              DatingPreference?
   pronouns            String?

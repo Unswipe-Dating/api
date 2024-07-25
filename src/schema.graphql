@@ -128,6 +128,8 @@ type Profile {
   dob: String
   gender: DatingPreference
   height: String
+  hideDatingPreference: Boolean
+  hidePronouns: Boolean
   hometown: String
   id: String
   interests: JSONObject
@@ -269,6 +271,8 @@ input UpsertProfileInput {
   dob: String
   gender: DatingPreference
   height: String
+  hideDatingPreference: Boolean
+  hidePronouns: Boolean
   hometown: String
   id: String
   interests: JSONObject

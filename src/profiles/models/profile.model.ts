@@ -25,6 +25,12 @@ export class Profile extends BaseModel {
   showTruncatedName: boolean;
 
   @Field({ nullable: true })
+  hideDatingPreference?: boolean;
+
+  @Field({ nullable: true })
+  hidePronouns?: boolean;
+  
+  @Field({ nullable: true })
   dob: string;
 
   @Field(() => DatingPreference, { nullable: true })
