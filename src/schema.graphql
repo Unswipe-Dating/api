@@ -133,6 +133,7 @@ type Profile {
   hometown: String
   id: String
   interests: JSONObject
+  isVerified: Boolean
   languages: [String!]
   lifestyle: JSONObject
   location: String

@@ -19,6 +19,9 @@ export class Profile extends BaseModel {
   completed: boolean;
 
   @Field({ nullable: true })
+  isVerified?: boolean;
+
+  @Field({ nullable: true })
   name: string;
 
   @Field({ nullable: true })
