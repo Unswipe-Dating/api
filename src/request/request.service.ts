@@ -29,7 +29,7 @@ export class RequestService {
     // TODO: Add reject userIds to rejectedList of a user (similar to blockedUsers)
   }
 
-  async createRequest(userId: string, requestObj: RequestInput) : Promise<Request> {
+  async createRequest(userId: string, requestObj: RequestInput): Promise<Request> {
     const existingRequest =
       await this.databaseService.extendedClient.request.findFirst({
         where: {
@@ -61,7 +61,7 @@ export class RequestService {
     }
   }
 
-  async createNewRequest(requestData: RequestInput, user: User) : Promise<CreateRequest> {
+  async createNewRequest(requestData: RequestInput, user: User): Promise<CreateRequest> {
     const [requesteeProfile, requesterProfile] = await Promise.all([
       this.prismaService.profile.findFirst({
         where: {
@@ -94,14 +94,10 @@ export class RequestService {
       console.log('DEBUG', userWithTokens);
       // Send message to each of the tokens stored for this requestee.
       userWithTokens?.fcmRegisterationTokens.forEach(async (token) => {
-        const result = await this.notificationService.sendMessage({
-          token: token,
-          notification: {
-            title: `${requesterProfile.name} gave up swiping for you.`,
-            body: '', // TODO: Add data field here if needed.
-          },
-        });
-        console.log('result', result);
+        const title = `${requesterProfile.name} gave up swiping for you.`;
+        const body = ''; // TODO: Add data field here if needed.
+        await this.sendNotification(token, title, body);
+
       });
     } catch (error) {
       console.error('Could not send notifcation to', request.id);
@@ -187,14 +183,9 @@ export class RequestService {
       console.log('DEBUG (match) request', userWithTokens);
       // Send message to each of the tokens stored for this requestee.
       userWithTokens?.fcmRegisterationTokens.forEach(async (token) => {
-        const result = await this.notificationService.sendMessage({
-          token: token,
-          notification: {
-            title: 'You found a match!',
-            body: 'Open the app to see who it is', // TODO: Add data field here if needed.
-          },
-        });
-        console.log('result', result);
+        const title = 'You found a match!';
+        const body = 'Open the app to see who it is';
+        await this.sendNotification(token, title, body);
       });
     } catch (error) {
       console.error('Could not send notifcation to', request.id);
@@ -205,5 +196,20 @@ export class RequestService {
       userProfileImage: userProfileImage,
       requesteeProfileImage: requesteeProfileImage
     };
+  }
+
+  private async sendNotification(token: string, title: string, body: string) {
+    try {
+      const result = await this.notificationService.sendMessage({
+        token: token,
+        notification: {
+          title: title,
+          body: body, // TODO: Add data field here if needed.
+        },
+      });
+      console.log('result', result);
+    } catch (err) {
+      console.log("Error sending notif", err);
+    }
   }
 }
