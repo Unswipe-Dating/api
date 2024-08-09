@@ -38,7 +38,7 @@ export class UpsertProfileInput {
   completed: boolean;
 
   @Field({ nullable: true })
-  isVerified: boolean;
+  isVerified?: boolean;
 
   @Field({ nullable: true })
   name: string;
