@@ -45,6 +45,7 @@ export class ProfilesResolver {
         update: {
           userId: data.userId,
           completed: data.completed,
+          isVerified: data.isVerified,
           datingPreference: data.datingPreference,
           dob: data.dob,
           gender: data.gender,
